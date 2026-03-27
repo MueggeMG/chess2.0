@@ -24,22 +24,12 @@ stockfish.onmessage = (event) => {
   }
 
   if (msg.startsWith('bestmove')) {
-    console.log('BESTMOVE EMPFANGEN:', msg);
     const move = msg.split(' ')[1];
     const from = move.slice(0, 2);
     const to = move.slice(2, 4);
 
     chess.move({ from, to, promotion: 'q' });
-
-    ground.set({
-      fen: chess.fen(),
-      movable: {
-        color: 'white',
-        free: false,
-        dests: getLegalMoves(),
-      },
-      turnColor: 'white',
-    });
+    updateBoard();
   }
 };
 
@@ -68,12 +58,22 @@ function getLegalMoves() {
 
 function onMove(from, to) {
   chess.move({ from, to, promotion: 'q' });
-  console.log('Zug gemacht:', from, to);
-  console.log('FEN:', chess.fen());
 
   if (!chess.isGameOver()) {
-    console.log('Sende an Stockfish...');
     stockfish.postMessage('position fen ' + chess.fen());
     stockfish.postMessage('go movetime 500');
   }
+}
+
+function updateBoard() {
+  ground.set({
+    fen: chess.fen(),
+    movable: {
+      color: 'white',
+      free: false,
+      dests: getLegalMoves(),
+    },
+    turnColor: 'white',
+    check: chess.inCheck(),
+  });
 }
