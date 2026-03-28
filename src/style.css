@@ -50,6 +50,7 @@ body {
   border: 1px solid rgba(201, 168, 76, 0.3);
   padding: 40px 52px;
   text-align: center;
+  position: relative;
 }
 
 .overlay-title {
@@ -85,4 +86,21 @@ body {
 .overlay-btn:hover {
   background: #c9a84c;
   color: #0a0a0a;
+}
+
+.overlay-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: #888;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.2s;
+}
+
+.overlay-close:hover {
+  color: #c9a84c;
 }

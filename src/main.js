@@ -132,3 +132,10 @@ overlayBtn.addEventListener('click', () => {
     turnColor: 'white',
   });
 });
+
+const overlayClose = document.getElementById('overlayClose');
+
+overlayClose.addEventListener('click', () => {
+  overlay.classList.remove('visible');
+  setTimeout(() => overlay.classList.add('hidden'), 400);
+});
