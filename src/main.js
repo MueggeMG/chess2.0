@@ -189,10 +189,22 @@ document.querySelectorAll('.diff-item').forEach((item) => {
 });
 
 // =========================================
-// ZUG ZURÜCK
+// UNDO / REDO
 // =========================================
+let redoStack = [];
+
 document.getElementById('undoBtn').addEventListener('click', () => {
-  chess.undo(); // Engine-Zug zurück
-  chess.undo(); // Spieler-Zug zurück
+  const move = chess.undo(); // Engine-Zug zurück
+  if (move) redoStack.push(move);
+  const move2 = chess.undo(); // Spieler-Zug zurück
+  if (move2) redoStack.push(move2);
+  updateBoard();
+});
+
+document.getElementById('redoBtn').addEventListener('click', () => {
+  const move1 = redoStack.pop();
+  if (move1) chess.move(move1);
+  const move2 = redoStack.pop();
+  if (move2) chess.move(move2);
   updateBoard();
 });
