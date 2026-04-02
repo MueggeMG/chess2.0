@@ -193,7 +193,7 @@ document.querySelectorAll('.diff-item').forEach((item) => {
 });
 
 // =========================================
-// UNDO / REDO
+// UNDO / REDO / SURRENDER
 // =========================================
 let redoStack = [];
 
@@ -215,6 +215,10 @@ document.getElementById('redoBtn').addEventListener('click', () => {
   updateBoard();
   updateStatus();
   updateHistory();
+});
+
+document.getElementById('surrenderBtn').addEventListener('click', () => {
+  showOverlay('Aufgegeben.', 'Du hast die Partie aufgegeben · Neues Spiel?');
 });
 
 // =========================================
