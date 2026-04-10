@@ -17,7 +17,7 @@ const chess = new Chess();
 // =========================================
 //      STOCKFISH ENGINE — Web Worker
 // =========================================
-const stockfish = new Worker('/chess/stockfish.js');
+const stockfish = new Worker('/chess2.0/stockfish.js');
 
 let engineReady = false;
 let skillLevel = 10;
