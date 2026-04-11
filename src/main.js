@@ -9,6 +9,21 @@ import 'chessground/assets/chessground.cburnett.css';
 import './style.css';
 import './background.js';
 
+import { io } from 'socket.io-client';
+
+// =========================================
+// SERVER VERBINDUNG
+// =========================================
+const socket = io('https://chess2-0-server.onrender.com');
+
+socket.on('connect', () => {
+  console.log('Mit Server verbunden:', socket.id);
+});
+
+socket.on('disconnect', () => {
+  console.log('Verbindung getrennt');
+});
+
 // =========================================
 //      SPIELLOGIK — chess.js
 // =========================================
