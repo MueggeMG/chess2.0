@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chess 2.0 – Marcel Graf</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap"
+    rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+</head>
+
+<body>
+  <!-- Hintergrundanimation -->
+  <div id="bg">
+    <div class="sg" id="sg"></div>
+  </div>
+  <!-- Navigation -->
+  <nav>
+    <div><a class="nav-logo" href="https://mueggemg.github.io/portfolio">MG</a></div>
+    <ul class="nav-links">
+      <li><a href="https://mueggemg.github.io/portfolio/#me">Start</a></li>
+      <li><a href="https://mueggemg.github.io/portfolio/#about">Über mich</a></li>
+      <li><a href="https://mueggemg.github.io/portfolio/#skills">Skills</a></li>
+      <li><a href="https://mueggemg.github.io/portfolio/#projects">Projekte</a></li>
+      <li><a href="https://mueggemg.github.io/portfolio/#contact">Kontakt</a></li>
+    </ul>
+  </nav>
+  <!-- Schach -->
+  <div id="game-layout">
+    <div id="sidebar-left">
+      <div id="difficulty">
+        <p class="diff-label">Schwierigkeit</p>
+        <div class="diff-list">
+          <div class="diff-item" data-skill="2" data-time="100">
+            <div>
+              <div class="diff-name">Anfänger</div>
+              <div class="diff-desc">Skill 2 · 100ms</div>
+            </div>
+            <div class="diff-dot"></div>
+          </div>
+          <div class="diff-item active" data-skill="10" data-time="500">
+            <div>
+              <div class="diff-name">Mittel</div>
+              <div class="diff-desc">Skill 10 · 250ms</div>
+            </div>
+            <div class="diff-dot"></div>
+          </div>
+          <div class="diff-item" data-skill="16" data-time="1000">
+            <div>
+              <div class="diff-name">Stark</div>
+              <div class="diff-desc">Skill 16 · 750ms</div>
+            </div>
+            <div class="diff-dot"></div>
+          </div>
+          <div class="diff-item" data-skill="20" data-time="2000">
+            <div>
+              <div class="diff-name">Meister</div>
+              <div class="diff-desc">Skill 20 · 2000ms</div>
+            </div>
+            <div class="diff-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="container">
+      <div id="board"></div>
+      <div id="overlay" class="overlay hidden">
+        <div class="overlay-box">
+          <button class="overlay-close" id="overlayClose">✕</button>
+          <div class="overlay-title" id="overlayTitle">Schachmatt.</div>
+          <div class="overlay-sub" id="overlaySub">Die Engine gewinnt</div>
+          <button class="overlay-btn" id="overlayBtn">Neues Spiel ↺</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="sidebar-right">
+      <div id="actions">
+        <p class="action-label">Aktionen</p>
+        <div id="action-buttons">
+          <button id="undoBtn">Zurück <span>←</span></button>
+          <button id="surrenderBtn">Aufgeben <span>✕</span></button>
+          <button id="redoBtn">Vor <span>→</span></button>
+        </div>
+        <button id="newGameBtn">Neues Spiel ↺</button>
+      </div>
+
+      <div id="protokoll">
+        <p class="proto-label">Spielstatus</p>
+        <div id="status">
+          <div class="status-dot white" id="statusDot"></div>
+          <span class="status-text" id="statusText">Weiß am Zug</span>
+          <span class="status-sub" id="statusSub">Dein Zug</span>
+        </div>
+
+        <p class="proto-label" style="margin-top: 16px">Zughistorie</p>
+        <div id="history"></div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- Fußzeile -->
+  <footer>
+    <span>Marcel Graf © 2026</span>
+    <span>Entwickler in Ausbildung</span>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
