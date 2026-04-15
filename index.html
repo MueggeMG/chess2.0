@@ -1,14 +1,76 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="de">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chess 2.0</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="/src/lobby.css" />
 </head>
 
 <body>
-    <a href="game.html"></a>
+
+    <div class="cursor" id="cursor"></div>
+
+    <!-- Hintergrund Animation -->
+    <div id="bg">
+        <div class="sg" id="sg"></div>
+    </div>
+
+    <!-- Lobby -->
+    <main class="lobby">
+
+        <div class="lobby-hero">
+            <p class="lobby-label">Chess 2.0</p>
+            <h1 class="lobby-title">
+                Bereit für<br>
+                eine Partie <em>Schach?</em>
+            </h1>
+        </div>
+
+        <div class="lobby-actions">
+
+            <!-- Neues Spiel -->
+            <div class="lobby-card" id="createCard">
+                <p class="card-label">Neues Spiel</p>
+                <h2 class="card-title">Raum erstellen</h2>
+                <p class="card-desc">Erstelle einen Raum und teile den Code mit deinem Gegner.</p>
+                <button class="btn-primary" id="createBtn">Spiel erstellen →</button>
+                <div class="room-code hidden" id="roomCodeDisplay">
+                    <p class="code-label">Dein Raumcode</p>
+                    <p class="code-value" id="roomCode">------</p>
+                    <p class="code-hint">Teile diesen Code mit deinem Gegner</p>
+                </div>
+            </div>
+
+            <!-- Beitreten -->
+            <div class="lobby-card" id="joinCard">
+                <p class="card-label">Beitreten</p>
+                <h2 class="card-title">Raum beitreten</h2>
+                <p class="card-desc">Gib den Code deines Gegners ein um beizutreten.</p>
+                <div class="join-input">
+                    <input type="text" id="roomInput" placeholder="RAUMCODE" maxlength="6" />
+                    <button class="btn-primary" id="joinBtn">Beitreten →</button>
+                </div>
+                <p class="error-msg hidden" id="joinError">Raum nicht gefunden</p>
+            </div>
+
+        </div>
+
+        <!-- Warte-Status -->
+        <div class="lobby-waiting hidden" id="waitingScreen">
+            <div class="waiting-dot"></div>
+            <p class="waiting-text">Warte auf Gegner...</p>
+        </div>
+
+    </main>
+
+    <script type="module" src="/src/lobby.js"></script>
 </body>
 
 </html>
