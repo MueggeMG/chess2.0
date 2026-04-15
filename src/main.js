@@ -8,21 +8,43 @@ import 'chessground/assets/chessground.brown.css';
 import 'chessground/assets/chessground.cburnett.css';
 import './style.css';
 import './background.js';
-
 import { io } from 'socket.io-client';
 
 // =========================================
-// SERVER VERBINDUNG
+// URL PARAMETER AUSLESEN
 // =========================================
-const socket = io('https://chess2-0-server.onrender.com');
+const urlParams = new URLSearchParams(window.location.search);
+const roomId = urlParams.get('room');
+const myColor = urlParams.get('color') || 'white';
+const isMultiplayer = !!roomId;
 
-socket.on('connect', () => {
-  console.log('Mit Server verbunden:', socket.id);
-});
+// =========================================
+// SOCKET VERBINDUNG (nur im Multiplayer)
+// =========================================
+let socket = null;
 
-socket.on('disconnect', () => {
-  console.log('Verbindung getrennt');
-});
+if (isMultiplayer) {
+  socket = io('https://chess2-0-server.onrender.com');
+
+  socket.on('connect', () => {
+    console.log('Mit Server verbunden:', socket.id);
+    socket.emit('join-game', { roomId, color: myColor });
+  });
+
+  socket.on('opponent-move', (move) => {
+    chess.move(move);
+    updateBoard();
+    updateStatus();
+    updateHistory();
+  });
+
+  socket.on('opponent-disconnected', () => {
+    showOverlay(
+      'Gegner hat das Spiel verlassen.',
+      'Die Verbindung wurde getrennt.',
+    );
+  });
+}
 
 // =========================================
 //      SPIELLOGIK — chess.js
@@ -41,7 +63,6 @@ let moveTime = 500;
 stockfish.onmessage = (event) => {
   const msg = event.data;
 
-  // UCI Handshake beim Start
   if (msg === 'uciok') {
     stockfish.postMessage('isready');
   }
@@ -50,7 +71,6 @@ stockfish.onmessage = (event) => {
     engineReady = true;
   }
 
-  // Engine hat besten Zug berechnet
   if (msg.startsWith('bestmove')) {
     const move = msg.split(' ')[1];
     const from = move.slice(0, 2);
@@ -73,7 +93,6 @@ stockfish.onmessage = (event) => {
   }
 };
 
-// UCI Initialisierung starten
 stockfish.postMessage('uci');
 
 // =========================================
@@ -81,8 +100,9 @@ stockfish.postMessage('uci');
 // =========================================
 const ground = Chessground(document.getElementById('board'), {
   fen: chess.fen(),
+  orientation: myColor,
   movable: {
-    color: 'white',
+    color: isMultiplayer ? myColor : 'white',
     free: false,
     dests: getLegalMoves(),
   },
@@ -92,14 +112,8 @@ const ground = Chessground(document.getElementById('board'), {
 });
 
 // =========================================
-// RESPONSIVE — Brett neu berechnen               //TODO
-// =========================================
-
-// =========================================
 //      HILFSFUNKTIONEN
 // =========================================
-
-// Gibt alle legalen Züge als Map zurück (Chessground Format)
 function getLegalMoves() {
   const dests = new Map();
   chess.moves({ verbose: true }).forEach((m) => {
@@ -109,16 +123,16 @@ function getLegalMoves() {
   return dests;
 }
 
-// Aktualisiert das Brett nach jedem Zug
 function updateBoard() {
+  const color = isMultiplayer ? myColor : 'white';
   ground.set({
     fen: chess.fen(),
     movable: {
-      color: 'white',
+      color: chess.turn() === color[0] ? color : undefined,
       free: false,
       dests: getLegalMoves(),
     },
-    turnColor: 'white',
+    turnColor: chess.turn() === 'w' ? 'white' : 'black',
     check: chess.inCheck(),
   });
 }
@@ -127,25 +141,36 @@ function updateBoard() {
 //      SPIELERZUG
 // =========================================
 function onMove(from, to) {
-  chess.move({ from, to, promotion: 'q' });
+  const move = chess.move({ from, to, promotion: 'q' });
+
+  if (!move) return;
+
   updateStatus();
   updateHistory();
 
-  if (chess.isCheckmate()) {
-    showOverlay('Schachmatt.', 'Du gewinnst diese Partie · Glückwunsch!');
-    return;
-  }
+  if (isMultiplayer) {
+    socket.emit('move', { roomId, move });
 
-  if (chess.isDraw()) {
-    showOverlay('Remis.', 'Die Partie endet unentschieden');
-    return;
-  }
-
-  // Stockfish zur Antwort auffordern
-  if (!chess.isGameOver()) {
-    stockfish.postMessage(`setoption name Skill Level value ${skillLevel}`);
-    stockfish.postMessage('position fen ' + chess.fen());
-    stockfish.postMessage(`go movetime ${moveTime}`);
+    if (chess.isCheckmate()) {
+      showOverlay('Schachmatt!', 'Du gewinnst diese Partie · Glückwunsch!');
+    }
+    if (chess.isDraw()) {
+      showOverlay('Remis.', 'Die Partie endet unentschieden');
+    }
+  } else {
+    if (chess.isCheckmate()) {
+      showOverlay('Schachmatt.', 'Du gewinnst diese Partie · Glückwunsch!');
+      return;
+    }
+    if (chess.isDraw()) {
+      showOverlay('Remis.', 'Die Partie endet unentschieden');
+      return;
+    }
+    if (!chess.isGameOver()) {
+      stockfish.postMessage(`setoption name Skill Level value ${skillLevel}`);
+      stockfish.postMessage('position fen ' + chess.fen());
+      stockfish.postMessage(`go movetime ${moveTime}`);
+    }
   }
 }
 
@@ -158,7 +183,6 @@ const overlaySub = document.getElementById('overlaySub');
 const overlayBtn = document.getElementById('overlayBtn');
 const overlayClose = document.getElementById('overlayClose');
 
-// Overlay anzeigen mit Verzögerung
 function showOverlay(title, sub) {
   overlayTitle.textContent = title;
   overlaySub.textContent = sub;
@@ -169,28 +193,27 @@ function showOverlay(title, sub) {
   }, 1000);
 }
 
-// Overlay schließen
 function hideOverlay() {
   overlay.classList.remove('visible');
   setTimeout(() => overlay.classList.add('hidden'), 400);
 }
 
-// Overlay per X schließen
 overlayClose.addEventListener('click', hideOverlay);
 
-// Neues Spiel starten
 overlayBtn.addEventListener('click', () => {
   hideOverlay();
   chess.reset();
   ground.set({
     fen: chess.fen(),
     movable: {
-      color: 'white',
+      color: isMultiplayer ? myColor : 'white',
       free: false,
       dests: getLegalMoves(),
     },
     turnColor: 'white',
   });
+  updateStatus();
+  updateHistory();
 });
 
 // =========================================
@@ -213,9 +236,9 @@ document.querySelectorAll('.diff-item').forEach((item) => {
 let redoStack = [];
 
 document.getElementById('undoBtn').addEventListener('click', () => {
-  const move = chess.undo(); // Engine-Zug zurück
+  const move = chess.undo();
   if (move) redoStack.push(move);
-  const move2 = chess.undo(); // Spieler-Zug zurück
+  const move2 = chess.undo();
   if (move2) redoStack.push(move2);
   updateBoard();
   updateStatus();
@@ -242,7 +265,7 @@ document.getElementById('newGameBtn').addEventListener('click', () => {
   ground.set({
     fen: chess.fen(),
     movable: {
-      color: 'white',
+      color: isMultiplayer ? myColor : 'white',
       free: false,
       dests: getLegalMoves(),
     },
@@ -274,14 +297,21 @@ function updateStatus() {
     return;
   }
 
-  if (chess.turn() === 'w') {
-    dot.className = 'status-dot white';
-    text.textContent = 'Weiß am Zug';
-    sub.textContent = 'Dein Zug';
-  } else {
-    dot.className = 'status-dot thinking';
-    text.textContent = 'Engine denkt...';
+  if (isMultiplayer) {
+    const myTurn = chess.turn() === myColor[0];
+    dot.className = myTurn ? `status-dot ${myColor}` : 'status-dot thinking';
+    text.textContent = myTurn ? 'Dein Zug' : 'Gegner denkt...';
     sub.textContent = 'Zug ' + chess.moveNumber();
+  } else {
+    if (chess.turn() === 'w') {
+      dot.className = 'status-dot white';
+      text.textContent = 'Weiß am Zug';
+      sub.textContent = 'Dein Zug';
+    } else {
+      dot.className = 'status-dot thinking';
+      text.textContent = 'Engine denkt...';
+      sub.textContent = 'Zug ' + chess.moveNumber();
+    }
   }
 }
 
