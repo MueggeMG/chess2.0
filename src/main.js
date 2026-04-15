@@ -44,6 +44,12 @@ if (isMultiplayer) {
       'Die Verbindung wurde getrennt.',
     );
   });
+
+  socket.on('opponent-action', ({ action }) => {
+    if (action === 'surrender') {
+      showOverlay('Gegner hat aufgegeben.', 'Du gewinnst diese Partie!');
+    }
+  });
 }
 
 // =========================================
@@ -124,15 +130,21 @@ function getLegalMoves() {
 }
 
 function updateBoard() {
-  const color = isMultiplayer ? myColor : 'white';
+  const turn = chess.turn() === 'w' ? 'white' : 'black';
+  const canMove = isMultiplayer
+    ? turn === myColor
+      ? myColor
+      : undefined
+    : 'white';
+
   ground.set({
     fen: chess.fen(),
     movable: {
-      color: chess.turn() === color[0] ? color : undefined,
+      color: canMove,
       free: false,
-      dests: getLegalMoves(),
+      dests: canMove ? getLegalMoves() : new Map(),
     },
-    turnColor: chess.turn() === 'w' ? 'white' : 'black',
+    turnColor: turn,
     check: chess.inCheck(),
   });
 }
@@ -257,6 +269,9 @@ document.getElementById('redoBtn').addEventListener('click', () => {
 
 document.getElementById('surrenderBtn').addEventListener('click', () => {
   showOverlay('Aufgegeben.', 'Du hast die Partie aufgegeben · Neues Spiel?');
+  if (isMultiplayer) {
+    socket.emit('game-action', { roomId, action: 'surrender' });
+  }
 });
 
 document.getElementById('newGameBtn').addEventListener('click', () => {
