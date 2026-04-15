@@ -32,6 +32,7 @@ if (isMultiplayer) {
   });
 
   socket.on('opponent-move', (move) => {
+    console.log('Gegner Zug empfangen:', move);
     chess.move(move);
     updateBoard();
     updateStatus();
