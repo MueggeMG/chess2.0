@@ -158,6 +158,11 @@ function onMove(from, to) {
 
   if (!move) return;
 
+  console.log('Zug gemacht:', move);
+  console.log('isMultiplayer:', isMultiplayer);
+  console.log('roomId:', roomId);
+  console.log('socket:', socket);
+
   updateStatus();
   updateHistory();
 
