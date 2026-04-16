@@ -274,6 +274,8 @@ document.getElementById('redoBtn').addEventListener('click', () => {
 });
 
 document.getElementById('surrenderBtn').addEventListener('click', () => {
+  if (!confirm('Wirklich aufgeben?')) return;
+
   showOverlay('Aufgegeben.', 'Du hast die Partie aufgegeben · Neues Spiel?');
   if (isMultiplayer) {
     socket.emit('game-action', { roomId, action: 'surrender' });
