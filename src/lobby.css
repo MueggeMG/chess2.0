@@ -20,7 +20,8 @@ body {
   font-family: 'DM Mono', monospace;
   font-weight: 300;
   min-height: 100vh;
-  overflow: hidden;
+  cursor: none;
+  overflow-x: hidden;
 }
 
 /* HINTERGRUND */
