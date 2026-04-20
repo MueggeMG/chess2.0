@@ -384,3 +384,4 @@ if (isMultiplayer) {
 
 updateStatus();
 updateHistory();
+test;
