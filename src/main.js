@@ -51,6 +51,32 @@ if (isMultiplayer) {
       showOverlay('Gegner hat aufgegeben.', 'Du gewinnst diese Partie!');
     }
   });
+
+  // Gegner möchte Zug zurücknehmen
+  socket.on('undo-requested', () => {
+    const accepted = confirm(
+      'Dein Gegner möchte einen Zug zurücknehmen. Akzeptieren?',
+    );
+    socket.emit('undo-response', { roomId, accepted });
+  });
+
+  // Antwort auf Undo Anfrage
+  socket.on('undo-answered', ({ accepted }) => {
+    document.getElementById('undoBtn').style.opacity = '1';
+    document.getElementById('undoBtn').style.pointerEvents = 'all';
+
+    if (accepted) {
+      chess.undo();
+      chess.undo();
+      updateBoard();
+      updateStatus();
+      updateHistory();
+    } else {
+      // Kleines Feedback dass Anfrage abgelehnt wurde
+      showOverlay('Abgelehnt.', 'Dein Gegner hat die Undo-Anfrage abgelehnt.');
+      setTimeout(hideOverlay, 2000);
+    }
+  });
 }
 
 // =========================================
@@ -254,13 +280,19 @@ document.querySelectorAll('.diff-item').forEach((item) => {
 let redoStack = [];
 
 document.getElementById('undoBtn').addEventListener('click', () => {
-  const move = chess.undo();
-  if (move) redoStack.push(move);
-  const move2 = chess.undo();
-  if (move2) redoStack.push(move2);
-  updateBoard();
-  updateStatus();
-  updateHistory();
+  if (isMultiplayer) {
+    socket.emit('undo-request', { roomId });
+    document.getElementById('undoBtn').style.opacity = '0.3';
+    document.getElementById('undoBtn').style.pointerEvents = 'none';
+  } else {
+    const move = chess.undo();
+    if (move) redoStack.push(move);
+    const move2 = chess.undo();
+    if (move2) redoStack.push(move2);
+    updateBoard();
+    updateStatus();
+    updateHistory();
+  }
 });
 
 document.getElementById('redoBtn').addEventListener('click', () => {
