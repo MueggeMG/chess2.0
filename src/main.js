@@ -80,6 +80,7 @@ if (isMultiplayer) {
 
   // Game bei neuem Laden auf den aktuellen Stand setzen
   socket.on('restore-game', ({ moves }) => {
+    console.log('restore-game empfangen:', moves);
     chess.reset();
     moves.forEach((move) => chess.move(move));
     updateBoard();
