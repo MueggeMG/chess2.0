@@ -33,6 +33,7 @@ if (isMultiplayer) {
 
   socket.on('connect', () => {
     console.log('Mit Server verbunden:', socket.id);
+    console.log('Sende join-game mit roomId:', roomId);
     socket.emit('join-game', { roomId, color: myColor });
   });
 
