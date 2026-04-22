@@ -19,6 +19,11 @@ const myColor = urlParams.get('color') || 'white';
 const isMultiplayer = !!roomId;
 
 // =========================================
+//      SPIELLOGIK — chess.js
+// =========================================
+const chess = new Chess();
+
+// =========================================
 // SOCKET VERBINDUNG (nur im Multiplayer)
 // =========================================
 let socket = null;
@@ -88,11 +93,6 @@ if (isMultiplayer) {
     updateHistory();
   });
 }
-
-// =========================================
-//      SPIELLOGIK — chess.js
-// =========================================
-const chess = new Chess();
 
 // =========================================
 //      STOCKFISH ENGINE — Web Worker
