@@ -416,10 +416,5 @@ if (isMultiplayer) {
   document.getElementById('redoBtn').style.display = 'none';
 }
 
-if (isMultiplayer) {
-  document.getElementById('undoBtn').style.opacity = '0.3';
-  document.getElementById('undoBtn').style.pointerEvents = 'none';
-}
-
 updateStatus();
 updateHistory();
