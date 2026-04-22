@@ -77,6 +77,15 @@ if (isMultiplayer) {
       setTimeout(hideOverlay, 2000);
     }
   });
+
+  // Game bei neuem Laden auf den aktuellen Stand setzen
+  socket.on('restore-game', ({ moves }) => {
+    chess.reset();
+    moves.forEach((move) => chess.move(move));
+    updateBoard();
+    updateStatus();
+    updateHistory();
+  });
 }
 
 // =========================================
