@@ -282,8 +282,6 @@ let redoStack = [];
 document.getElementById('undoBtn').addEventListener('click', () => {
   if (isMultiplayer) {
     socket.emit('undo-request', { roomId });
-    document.getElementById('undoBtn').style.opacity = '0.3';
-    document.getElementById('undoBtn').style.pointerEvents = 'none';
   } else {
     const move = chess.undo();
     if (move) redoStack.push(move);
