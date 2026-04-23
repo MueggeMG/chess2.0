@@ -45,11 +45,12 @@ if (isMultiplayer) {
     updateHistory();
   });
 
-  socket.on('opponent-disconnected', () => {
+  socket.on('opponent-disconnected-temp', () => {
     showOverlay(
-      'Gegner hat das Spiel verlassen.',
-      'Die Verbindung wurde getrennt.',
+      'Gegner hat die Verbindung verloren.',
+      'Warte auf Rückkehr... oder schließe das Spiel.',
     );
+    setTimeout(hideOverlay, 4000);
   });
 
   socket.on('opponent-action', ({ action }) => {
