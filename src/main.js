@@ -421,6 +421,3 @@ if (isMultiplayer) {
 
 updateStatus();
 updateHistory();
-
-
-Heute rein produktiv in Programmierforen
