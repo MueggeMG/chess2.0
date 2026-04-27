@@ -421,3 +421,5 @@ if (isMultiplayer) {
 
 updateStatus();
 updateHistory();
+
+Vorbereitung für IHK Prüfung
