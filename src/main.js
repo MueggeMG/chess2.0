@@ -421,3 +421,5 @@ if (isMultiplayer) {
 
 updateStatus();
 updateHistory();
+[UPDATE]
+Vorbereitungen für die Abschlussprüfung
