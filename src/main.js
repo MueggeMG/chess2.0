@@ -94,6 +94,28 @@ if (isMultiplayer) {
     updateStatus();
     updateHistory();
   });
+
+  socket.on('opponent-reconnected', () => {
+    if (disconnectTimer) {
+      clearInterval(disconnectTimer);
+      disconnectTimer = null;
+    }
+    hideOverlay();
+  });
+
+  // Timer stoppen falls Gegner zurückgekommen ist
+  socket.on('opponent-move', (move) => {
+    if (disconnectTimer) {
+      clearInterval(disconnectTimer);
+      disconnectTimer = null;
+      hideOverlay();
+    }
+
+    chess.move(move);
+    updateBoard();
+    updateStatus();
+    updateHistory();
+  });
 }
 
 // =========================================
