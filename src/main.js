@@ -47,10 +47,10 @@ if (isMultiplayer) {
 
   socket.on('opponent-disconnected-temp', () => {
     showOverlay(
-      'Gegner hat die Verbindung verloren.',
-      'Warte auf Rückkehr... oder schließe das Spiel.',
+      'Gegner offline.',
+      'Dein Gegner hat die Verbindung verloren.',
+      true, // ← Timer aktivieren
     );
-    setTimeout(hideOverlay, 4000);
   });
 
   socket.on('opponent-action', ({ action }) => {
@@ -372,6 +372,16 @@ document.getElementById('newGameBtn').addEventListener('click', () => {
   });
   updateStatus();
   updateHistory();
+});
+
+// =========================================
+// Disconnected Overlay
+// =========================================
+document.getElementById('overlayWinBtn').addEventListener('click', () => {
+  hideOverlay();
+  setTimeout(() => {
+    showOverlay('Sieg!', 'Dein Gegner ist nicht zurückgekommen · Du gewinnst!');
+  }, 450);
 });
 
 // =========================================
