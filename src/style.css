@@ -333,6 +333,53 @@ nav.scrolled {
 }
 
 /* =========================================
+   TIMER
+========================================= */
+.overlay-timer {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.timer-circle {
+  width: 64px;
+  height: 64px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--gold);
+  transition: border-color 0.3s;
+}
+
+.timer-circle.urgent {
+  border-color: #e25555;
+  color: #e25555;
+}
+
+.timer-hint {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+
+.overlay-btn-win {
+  margin-top: 8px;
+  border-color: var(--gold);
+  background: var(--gold);
+  color: var(--black);
+}
+
+.overlay-btn-win:hover {
+  background: var(--gold-light);
+}
+
+/* =========================================
    AKTIONEN
 ========================================= */
 #actions {
