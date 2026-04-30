@@ -108,7 +108,7 @@ if (isMultiplayer) {
     if (disconnectTimer) {
       clearInterval(disconnectTimer);
       disconnectTimer = null;
-      hideOverlay();
+      hideOverlay(
     }
 
     chess.move(move);
