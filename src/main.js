@@ -103,7 +103,7 @@ if (isMultiplayer) {
     hideOverlay();
   });
 
-  // Timer stoppen falls Gegner zurückgekommen istt
+  // Timer stoppen falls Gegner zurückgekommen ist
   socket.on('opponent-move', (move) => {
     if (disconnectTimer) {
       clearInterval(disconnectTimer);
