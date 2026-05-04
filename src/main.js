@@ -116,6 +116,14 @@ if (isMultiplayer) {
     updateStatus();
     updateHistory();
   });
+
+  socket.on('new-game-request', ({ roomId }) => {
+    socket.to(roomId).emit('new-game-requested');
+  });
+
+  socket.on('new-game-response', ({ roomId, accepted }) => {
+    socket.to(roomId).emit('new-game-answered', { accepted });
+  });
 }
 
 // =========================================
