@@ -388,19 +388,13 @@ document.getElementById('surrenderBtn').addEventListener('click', () => {
 });
 
 document.getElementById('newGameBtn').addEventListener('click', () => {
-  chess.reset();
-  redoStack = [];
-  ground.set({
-    fen: chess.fen(),
-    movable: {
-      color: isMultiplayer ? myColor : 'white',
-      free: false,
-      dests: getLegalMoves(),
-    },
-    turnColor: 'white',
-  });
-  updateStatus();
-  updateHistory();
+  if (isMultiplayer) {
+    socket.emit('new-game-request', { roomId });
+    document.getElementById('newGameBtn').textContent = 'Warte auf Gegner...';
+    document.getElementById('newGameBtn').disabled = true;
+  } else {
+    startNewGame();
+  }
 });
 
 // =========================================
@@ -479,6 +473,27 @@ function updateHistory() {
 
   histEl.innerHTML = html;
   histEl.scrollTop = histEl.scrollHeight;
+}
+
+// Neues Spiel starten
+function startNewGame() {
+  chess.reset();
+  redoStack = [];
+  hideOverlay();
+  ground.set({
+    fen: chess.fen(),
+    movable: {
+      color: isMultiplayer ? myColor : 'white',
+      free: false,
+      dests: getLegalMoves(),
+    },
+    turnColor: 'white',
+  });
+  updateStatus();
+  updateHistory();
+  const btn = document.getElementById('newGameBtn');
+  btn.textContent = 'Neues Spiel ↺';
+  btn.disabled = false;
 }
 
 // =========================================
