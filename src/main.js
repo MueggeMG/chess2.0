@@ -55,7 +55,7 @@ if (isMultiplayer) {
 
   socket.on('opponent-action', ({ action }) => {
     if (action === 'surrender') {
-      showOverlay('Gegner hat aufgegeben.', 'Du gewinnst diese Partie!');
+      showOverlay('Gegner hat aufgegeben.', 'Du gewinnst diese Partie!', false);
     }
   });
 
@@ -373,8 +373,7 @@ document.getElementById('redoBtn').addEventListener('click', () => {
 
 document.getElementById('surrenderBtn').addEventListener('click', () => {
   if (!confirm('Wirklich aufgeben?')) return;
-
-  showOverlay('Aufgegeben.', 'Du hast die Partie aufgegeben · Neues Spiel?');
+  showOverlay('Aufgegeben.', 'Du hast die Partie aufgegeben.', false);
   if (isMultiplayer) {
     socket.emit('game-action', { roomId, action: 'surrender' });
   }
