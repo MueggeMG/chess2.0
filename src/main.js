@@ -37,6 +37,26 @@ if (isMultiplayer) {
     socket.emit('join-game', { roomId, color: myColor });
   });
 
+  socket.on('new-game-requested', () => {
+    const accepted = confirm(
+      'Dein Gegner möchte ein neues Spiel starten. Akzeptieren?',
+    );
+    socket.emit('new-game-response', { roomId, accepted });
+  });
+
+  socket.on('new-game-answered', ({ accepted }) => {
+    const btn = document.getElementById('newGameBtn');
+    btn.textContent = 'Neues Spiel ↺';
+    btn.disabled = false;
+
+    if (accepted) {
+      startNewGame();
+    } else {
+      showOverlay('Abgelehnt.', 'Dein Gegner möchte kein neues Spiel.');
+      setTimeout(hideOverlay, 2000);
+    }
+  });
+
   socket.on('opponent-move', (move) => {
     console.log('Gegner Zug empfangen:', move);
     chess.move(move);
