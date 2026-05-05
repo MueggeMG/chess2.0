@@ -47,6 +47,7 @@ if (isMultiplayer) {
   socket.on('new-game-answered', ({ accepted }) => {
     const btn = document.getElementById('newGameBtn');
     btn.textContent = 'Neues Spiel ↺';
+    dwad;
     btn.disabled = false;
 
     if (accepted) {
