@@ -5,3 +5,5 @@
 Chess Repo geklont
 Render.io + UptimeRobot eingerichtet
 Updated req rejoin
+
+Schul KI Projekt entwickelt
