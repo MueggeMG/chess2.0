@@ -529,5 +529,3 @@ if (isMultiplayer) {
 
 updateStatus();
 updateHistory();
-
-Projektdoku geschrieben
