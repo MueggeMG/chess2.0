@@ -7,3 +7,4 @@ Render.io + UptimeRobot eingerichtet
 Updated req rejoin
 
 Schul KI Projekt entwickelt
+Projektdoku geschrieben
