@@ -529,4 +529,3 @@ if (isMultiplayer) {
 
 updateStatus();
 updateHistory();
-Abschlussprüfung Präsentation vorbereitung
