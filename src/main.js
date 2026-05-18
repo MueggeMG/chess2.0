@@ -45,9 +45,8 @@ if (isMultiplayer) {
   });
 
   socket.on('new-game-answered', ({ accepted }) => {
-    const btn = document.getElementById('newGameBtn');
-    btn.textContent = 'Neues Spiel ↺';
-    btn.disabled = false;
+    overlayBtn.textContent = 'Neues Spiel ↺';
+    overlayBtn.disabled = false;
 
     if (accepted) {
       startNewGame();
@@ -58,7 +57,11 @@ if (isMultiplayer) {
   });
 
   socket.on('opponent-move', (move) => {
-    console.log('Gegner Zug empfangen:', move);
+    if (disconnectTimer) {
+      clearInterval(disconnectTimer);
+      disconnectTimer = null;
+      hideOverlay();
+    }
     chess.move(move);
     updateBoard();
     updateStatus();
@@ -121,28 +124,6 @@ if (isMultiplayer) {
       disconnectTimer = null;
     }
     hideOverlay();
-  });
-
-  // Timer stoppen falls Gegner zurückgekommen ist
-  socket.on('opponent-move', (move) => {
-    if (disconnectTimer) {
-      clearInterval(disconnectTimer);
-      disconnectTimer = null;
-      hideOverlay();
-    }
-
-    chess.move(move);
-    updateBoard();
-    updateStatus();
-    updateHistory();
-  });
-
-  socket.on('new-game-request', ({ roomId }) => {
-    socket.to(roomId).emit('new-game-requested');
-  });
-
-  socket.on('new-game-response', ({ roomId, accepted }) => {
-    socket.to(roomId).emit('new-game-answered', { accepted });
   });
 }
 
