@@ -291,41 +291,10 @@ const overlayClose = document.getElementById('overlayClose');
 
 let disconnectTimer = null;
 
-function showOverlay(title, sub, showTimer = false) {
+function showOverlay(title, sub, showBtn = true) {
   overlayTitle.textContent = title;
   overlaySub.textContent = sub;
-
-  const timerEl = document.getElementById('overlayTimer');
-  const timerCount = document.getElementById('timerCount');
-  const winBtn = document.getElementById('overlayWinBtn');
-  const timerCircle = timerEl.querySelector('.timer-circle');
-
-  // Timer zurücksetzen
-  if (disconnectTimer) clearInterval(disconnectTimer);
-  timerEl.classList.add('hidden');
-  winBtn.classList.add('hidden');
-  timerCircle.classList.remove('urgent');
-
-  if (showTimer) {
-    timerEl.classList.remove('hidden');
-    let seconds = 30;
-    timerCount.textContent = seconds;
-
-    disconnectTimer = setInterval(() => {
-      seconds--;
-      timerCount.textContent = seconds;
-
-      if (seconds <= 10) {
-        timerCircle.classList.add('urgent');
-      }
-
-      if (seconds <= 0) {
-        clearInterval(disconnectTimer);
-        timerEl.classList.add('hidden');
-        winBtn.classList.remove('hidden');
-      }
-    }, 1000);
-  }
+  overlayBtn.style.display = showBtn ? 'inline-block' : 'none';
 
   setTimeout(() => {
     overlay.classList.remove('hidden');
