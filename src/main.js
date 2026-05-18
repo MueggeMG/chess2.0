@@ -72,7 +72,7 @@ if (isMultiplayer) {
     showOverlay(
       'Gegner offline.',
       'Dein Gegner hat die Verbindung verloren.',
-      true, // ← Timer aktivieren
+      false,
     );
   });
 
@@ -359,16 +359,6 @@ document.getElementById('newGameBtn').addEventListener('click', () => {
   } else {
     startNewGame();
   }
-});
-
-// =========================================
-// Disconnected Overlay
-// =========================================
-document.getElementById('overlayWinBtn').addEventListener('click', () => {
-  hideOverlay();
-  setTimeout(() => {
-    showOverlay('Sieg!', 'Dein Gegner ist nicht zurückgekommen · Du gewinnst!');
-  }, 450);
 });
 
 // =========================================
