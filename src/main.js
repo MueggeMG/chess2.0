@@ -307,25 +307,6 @@ function hideOverlay() {
   setTimeout(() => overlay.classList.add('hidden'), 400);
 }
 
-function startNewGame() {
-  chess.reset();
-  redoStack = [];
-  hideOverlay();
-  ground.set({
-    fen: chess.fen(),
-    movable: {
-      color: isMultiplayer ? myColor : 'white',
-      free: false,
-      dests: getLegalMoves(),
-    },
-    turnColor: 'white',
-  });
-  overlayBtn.textContent = 'Neues Spiel ↺';
-  overlayBtn.disabled = false;
-  updateStatus();
-  updateHistory();
-}
-
 overlayClose.addEventListener('click', hideOverlay);
 
 overlayBtn.addEventListener('click', () => {
@@ -491,11 +472,10 @@ function startNewGame() {
     },
     turnColor: 'white',
   });
+  overlayBtn.textContent = 'Neues Spiel ↺';
+  overlayBtn.disabled = false;
   updateStatus();
   updateHistory();
-  const btn = document.getElementById('newGameBtn');
-  btn.textContent = 'Neues Spiel ↺';
-  btn.disabled = false;
 }
 
 // =========================================
