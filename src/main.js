@@ -305,7 +305,9 @@ function handleGameOver(title, sub) {
 overlayClose.addEventListener('click', hideOverlay);
 
 overlayBtn.addEventListener('click', () => {
+  console.log('overlayBtn geklickt, isMultiplayer:', isMultiplayer);
   if (isMultiplayer) {
+    console.log('Sende new-game-request...');
     socket.emit('new-game-request', { roomId });
     overlayBtn.textContent = 'Warte auf Gegner...';
     overlayBtn.disabled = true;
@@ -359,7 +361,7 @@ document.getElementById('redoBtn').addEventListener('click', () => {
 
 document.getElementById('surrenderBtn').addEventListener('click', () => {
   if (!confirm('Wirklich aufgeben?')) return;
-  handleGameOver('Aufgegeben.', 'Du hast die Partie aufgegeben.', false);
+  handleGameOver('Aufgegeben.', 'Du hast die Partie aufgegeben.');
   if (isMultiplayer) {
     socket.emit('game-action', { roomId, action: 'surrender' });
   }
