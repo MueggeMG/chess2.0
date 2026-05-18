@@ -307,11 +307,10 @@ function hideOverlay() {
   setTimeout(() => overlay.classList.add('hidden'), 400);
 }
 
-overlayClose.addEventListener('click', hideOverlay);
-
-overlayBtn.addEventListener('click', () => {
-  hideOverlay();
+function startNewGame() {
   chess.reset();
+  redoStack = [];
+  hideOverlay();
   ground.set({
     fen: chess.fen(),
     movable: {
@@ -321,8 +320,22 @@ overlayBtn.addEventListener('click', () => {
     },
     turnColor: 'white',
   });
+  overlayBtn.textContent = 'Neues Spiel ↺';
+  overlayBtn.disabled = false;
   updateStatus();
   updateHistory();
+}
+
+overlayClose.addEventListener('click', hideOverlay);
+
+overlayBtn.addEventListener('click', () => {
+  if (isMultiplayer) {
+    socket.emit('new-game-request', { roomId });
+    overlayBtn.textContent = 'Warte auf Gegner...';
+    overlayBtn.disabled = true;
+  } else {
+    startNewGame();
+  }
 });
 
 // =========================================
