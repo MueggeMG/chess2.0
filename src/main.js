@@ -78,7 +78,11 @@ if (isMultiplayer) {
 
   socket.on('opponent-action', ({ action }) => {
     if (action === 'surrender') {
-      showOverlay('Gegner hat aufgegeben.', 'Du gewinnst diese Partie!', false);
+      handleGameOver(
+        'Gegner hat aufgegeben.',
+        'Du gewinnst diese Partie!',
+        false,
+      );
     }
   });
 
@@ -158,12 +162,15 @@ stockfish.onmessage = (event) => {
     updateHistory();
 
     if (chess.isCheckmate()) {
-      showOverlay('Schachmatt.', 'Die Engine gewinnt · Versuch es noch einmal');
+      handleGameOver(
+        'Schachmatt.',
+        'Die Engine gewinnt · Versuch es noch einmal',
+      );
       return;
     }
 
     if (chess.isDraw()) {
-      showOverlay('Remis.', 'Die Partie endet unentschieden');
+      handleGameOver('Remis.', 'Die Partie endet unentschieden');
       return;
     }
   }
@@ -234,18 +241,18 @@ function onMove(from, to) {
     socket.emit('move', { roomId, move });
 
     if (chess.isCheckmate()) {
-      showOverlay('Schachmatt!', 'Du gewinnst diese Partie · Glückwunsch!');
+      handleGameOver('Schachmatt!', 'Du gewinnst diese Partie · Glückwunsch!');
     }
     if (chess.isDraw()) {
-      showOverlay('Remis.', 'Die Partie endet unentschieden');
+      handleGameOver('Remis.', 'Die Partie endet unentschieden');
     }
   } else {
     if (chess.isCheckmate()) {
-      showOverlay('Schachmatt.', 'Du gewinnst diese Partie · Glückwunsch!');
+      handleGameOver('Schachmatt.', 'Du gewinnst diese Partie · Glückwunsch!');
       return;
     }
     if (chess.isDraw()) {
-      showOverlay('Remis.', 'Die Partie endet unentschieden');
+      handleGameOver('Remis.', 'Die Partie endet unentschieden');
       return;
     }
     if (!chess.isGameOver()) {
@@ -281,6 +288,18 @@ function showOverlay(title, sub, showBtn = true) {
 function hideOverlay() {
   overlay.classList.remove('visible');
   setTimeout(() => overlay.classList.add('hidden'), 400);
+}
+
+function handleGameOver(title, sub) {
+  showOverlay(title, sub);
+
+  if (isMultiplayer) {
+    document.getElementById('surrenderBtn').style.display = 'none';
+    const newGameBtn = document.getElementById('newGameBtn');
+    newGameBtn.style.display = 'block';
+    newGameBtn.textContent = 'Neues Spiel anfragen ↺';
+    newGameBtn.disabled = false;
+  }
 }
 
 overlayClose.addEventListener('click', hideOverlay);
@@ -340,7 +359,7 @@ document.getElementById('redoBtn').addEventListener('click', () => {
 
 document.getElementById('surrenderBtn').addEventListener('click', () => {
   if (!confirm('Wirklich aufgeben?')) return;
-  showOverlay('Aufgegeben.', 'Du hast die Partie aufgegeben.', false);
+  handleGameOver('Aufgegeben.', 'Du hast die Partie aufgegeben.', false);
   if (isMultiplayer) {
     socket.emit('game-action', { roomId, action: 'surrender' });
   }
@@ -440,6 +459,12 @@ function startNewGame() {
   });
   overlayBtn.textContent = 'Neues Spiel ↺';
   overlayBtn.disabled = false;
+
+  if (isMultiplayer) {
+    document.getElementById('surrenderBtn').style.display = 'block';
+    document.getElementById('newGameBtn').style.display = 'none';
+  }
+
   updateStatus();
   updateHistory();
 }
