@@ -42,6 +42,10 @@ if (isMultiplayer) {
       'Dein Gegner möchte ein neues Spiel starten. Akzeptieren?',
     );
     socket.emit('new-game-response', { roomId, accepted });
+
+    if (accepted) {
+      startNewGame();
+    }
   });
 
   socket.on('new-game-answered', ({ accepted }) => {
