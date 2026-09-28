@@ -124,6 +124,13 @@ if (isMultiplayer) {
   socket.on('undo-requested', () => {
     showRequestBanner('Gegner möchte einen Zug zurücknehmen', (accepted) => {
       socket.emit('undo-response', { roomId, accepted });
+      if (accepted) {
+        chess.undo();
+        chess.undo();
+        updateBoard();
+        updateStatus();
+        updateHistory();
+      }
     });
   });
 
