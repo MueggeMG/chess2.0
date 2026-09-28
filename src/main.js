@@ -27,13 +27,12 @@ const chess = new Chess();
 // SOCKET VERBINDUNG (nur im Multiplayer)
 // =========================================
 let socket = null;
+let disconnectOverlayActive = false;
 
 if (isMultiplayer) {
   socket = io('https://chess2-0-server.onrender.com');
 
   socket.on('connect', () => {
-    console.log('Mit Server verbunden:', socket.id);
-    console.log('Sende join-game mit roomId:', roomId);
     socket.emit('join-game', { roomId, color: myColor });
   });
 
@@ -61,9 +60,8 @@ if (isMultiplayer) {
   });
 
   socket.on('opponent-move', (move) => {
-    if (disconnectTimer) {
-      clearInterval(disconnectTimer);
-      disconnectTimer = null;
+    if (disconnectOverlayActive) {
+      disconnectOverlayActive = false;
       hideOverlay();
     }
     chess.move(move);
@@ -73,6 +71,7 @@ if (isMultiplayer) {
   });
 
   socket.on('opponent-disconnected-temp', () => {
+    disconnectOverlayActive = true;
     showOverlay(
       'Gegner offline.',
       'Dein Gegner hat die Verbindung verloren.',
@@ -110,7 +109,6 @@ if (isMultiplayer) {
       updateStatus();
       updateHistory();
     } else {
-      // Kleines Feedback dass Anfrage abgelehnt wurde
       showOverlay('Abgelehnt.', 'Dein Gegner hat die Undo-Anfrage abgelehnt.');
       setTimeout(hideOverlay, 2000);
     }
@@ -118,7 +116,6 @@ if (isMultiplayer) {
 
   // Game bei neuem Laden auf den aktuellen Stand setzen
   socket.on('restore-game', ({ moves }) => {
-    console.log('restore-game empfangen:', moves);
     chess.reset();
     moves.forEach((move) => chess.move(move));
     updateBoard();
@@ -127,10 +124,7 @@ if (isMultiplayer) {
   });
 
   socket.on('opponent-reconnected', () => {
-    if (disconnectTimer) {
-      clearInterval(disconnectTimer);
-      disconnectTimer = null;
-    }
+    disconnectOverlayActive = false;
     hideOverlay();
   });
 }
@@ -276,8 +270,6 @@ const overlaySub = document.getElementById('overlaySub');
 const overlayBtn = document.getElementById('overlayBtn');
 const overlayClose = document.getElementById('overlayClose');
 
-let disconnectTimer = null;
-
 function showOverlay(title, sub, showBtn = true) {
   overlayTitle.textContent = title;
   overlaySub.textContent = sub;
@@ -309,9 +301,7 @@ function handleGameOver(title, sub) {
 overlayClose.addEventListener('click', hideOverlay);
 
 overlayBtn.addEventListener('click', () => {
-  console.log('overlayBtn geklickt, isMultiplayer:', isMultiplayer);
   if (isMultiplayer) {
-    console.log('Sende new-game-request...');
     socket.emit('new-game-request', { roomId });
     overlayBtn.textContent = 'Warte auf Gegner...';
     overlayBtn.disabled = true;
@@ -478,8 +468,6 @@ function startNewGame() {
 // =========================================
 // INITIALISIERUNG
 // =========================================
-// Multiplayer UI anpassen
-
 if (isMultiplayer) {
   document.getElementById('difficulty').style.display = 'none';
   document.getElementById('newGameBtn').style.display = 'none';
