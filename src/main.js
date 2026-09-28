@@ -24,6 +24,41 @@ const isMultiplayer = !!roomId;
 const chess = new Chess();
 
 // =========================================
+// REQUEST BANNER (Undo / Neues Spiel)
+// =========================================
+const requestBanner = document.getElementById('requestBanner');
+const requestText = document.getElementById('requestText');
+const requestAccept = document.getElementById('requestAccept');
+const requestDecline = document.getElementById('requestDecline');
+
+let requestCallback = null;
+
+function showRequestBanner(text, callback) {
+  requestText.textContent = text;
+  requestCallback = callback;
+  requestBanner.classList.remove('hidden');
+  requestBanner.classList.remove('visible');
+  void requestBanner.offsetWidth;
+  requestBanner.classList.add('visible');
+}
+
+function hideRequestBanner() {
+  requestBanner.classList.remove('visible');
+  setTimeout(() => requestBanner.classList.add('hidden'), 300);
+  requestCallback = null;
+}
+
+requestAccept.addEventListener('click', () => {
+  if (requestCallback) requestCallback(true);
+  hideRequestBanner();
+});
+
+requestDecline.addEventListener('click', () => {
+  if (requestCallback) requestCallback(false);
+  hideRequestBanner();
+});
+
+// =========================================
 // SOCKET VERBINDUNG (nur im Multiplayer)
 // =========================================
 let socket = null;
@@ -37,14 +72,10 @@ if (isMultiplayer) {
   });
 
   socket.on('new-game-requested', () => {
-    const accepted = confirm(
-      'Dein Gegner möchte ein neues Spiel starten. Akzeptieren?',
-    );
-    socket.emit('new-game-response', { roomId, accepted });
-
-    if (accepted) {
-      startNewGame();
-    }
+    showRequestBanner('Gegner möchte ein neues Spiel starten', (accepted) => {
+      socket.emit('new-game-response', { roomId, accepted });
+      if (accepted) startNewGame();
+    });
   });
 
   socket.on('new-game-answered', ({ accepted }) => {
@@ -91,10 +122,9 @@ if (isMultiplayer) {
 
   // Gegner möchte Zug zurücknehmen
   socket.on('undo-requested', () => {
-    const accepted = confirm(
-      'Dein Gegner möchte einen Zug zurücknehmen. Akzeptieren?',
-    );
-    socket.emit('undo-response', { roomId, accepted });
+    showRequestBanner('Gegner möchte einen Zug zurücknehmen', (accepted) => {
+      socket.emit('undo-response', { roomId, accepted });
+    });
   });
 
   // Antwort auf Undo Anfrage
