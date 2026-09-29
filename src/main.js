@@ -59,6 +59,18 @@ requestDecline.addEventListener('click', () => {
 });
 
 // =========================================
+// HILFSFUNKTION: Wie viele Züge sollen zurückgenommen werden?
+// Wenn der letzte Zug vom Anfrager stammt → nur 1 (Gegner hat noch nicht gezogen)
+// Wenn der letzte Zug vom Gegner stammt → 2 (beide letzten Züge zurück)
+// =========================================
+function getUndoCount(requesterColor) {
+  const history = chess.history({ verbose: true });
+  if (!history.length) return 0;
+  const lastMoveColor = history[history.length - 1].color === 'w' ? 'white' : 'black';
+  return lastMoveColor === requesterColor ? 1 : 2;
+}
+
+// =========================================
 // SOCKET VERBINDUNG (nur im Multiplayer)
 // =========================================
 let socket = null;
@@ -126,8 +138,9 @@ if (isMultiplayer) {
     showRequestBanner('Gegner möchte einen Zug zurücknehmen', (accepted) => {
       socket.emit('undo-response', { roomId, accepted });
       if (accepted) {
-        chess.undo();
-        chess.undo();
+        const opponentColor = myColor === 'white' ? 'black' : 'white';
+        const count = getUndoCount(opponentColor);
+        for (let i = 0; i < count; i++) chess.undo();
         updateBoard();
         updateStatus();
         updateHistory();
@@ -141,8 +154,8 @@ if (isMultiplayer) {
     document.getElementById('undoBtn').style.pointerEvents = 'all';
 
     if (accepted) {
-      chess.undo();
-      chess.undo();
+      const count = getUndoCount(myColor);
+      for (let i = 0; i < count; i++) chess.undo();
       updateBoard();
       updateStatus();
       updateHistory();
@@ -379,10 +392,11 @@ document.getElementById('undoBtn').addEventListener('click', () => {
   if (isMultiplayer) {
     socket.emit('undo-request', { roomId });
   } else {
-    const move = chess.undo();
-    if (move) redoStack.push(move);
-    const move2 = chess.undo();
-    if (move2) redoStack.push(move2);
+    const count = getUndoCount('white');
+    for (let i = 0; i < count; i++) {
+      const move = chess.undo();
+      if (move) redoStack.push(move);
+    }
     updateBoard();
     updateStatus();
     updateHistory();
