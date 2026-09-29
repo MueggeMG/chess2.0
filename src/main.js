@@ -262,30 +262,31 @@ function getLegalMoves() {
 function updateBoard(lastMove = undefined) {
   const turn = chess.turn() === 'w' ? 'white' : 'black';
 
-  let canMove;
-  let dests;
-
-  if (isMultiplayer) {
-    // Multiplayer: nur ziehen wenn ich dran bin
-    canMove = turn === myColor ? myColor : undefined;
-    dests = canMove ? getLegalMoves() : new Map();
-  } else {
-    // Einzelspieler: Spieler ist immer Weiß
-    // Wenn die Engine dran ist → leere dests, damit Chessground Premoves einreihen kann
-    canMove = 'white';
-    dests = turn === 'white' ? getLegalMoves() : new Map();
-  }
-
   const config = {
     fen: chess.fen(),
-    movable: {
-      color: canMove,
-      free: false,
-      dests,
-    },
     turnColor: turn,
     check: chess.inCheck(),
   };
+
+  if (isMultiplayer) {
+    // Multiplayer: nur ziehen wenn ich dran bin
+    const canMove = turn === myColor ? myColor : undefined;
+    config.movable = {
+      color: canMove,
+      free: false,
+      dests: canMove ? getLegalMoves() : new Map(),
+    };
+  } else {
+    // Einzelspieler: Spieler ist immer Weiß
+    // Wenn Weiß am Zug → legale Züge setzen
+    // Wenn Engine am Zug → dests NICHT übergeben, Chessground behält alte Werte
+    // → Figuren bleiben selektierbar (isMovable bleibt true) → Premoves funktionieren
+    config.movable = {
+      color: 'white',
+      free: false,
+      ...(turn === 'white' ? { dests: getLegalMoves() } : {}),
+    };
+  }
 
   if (lastMove !== undefined) config.lastMove = lastMove;
 
