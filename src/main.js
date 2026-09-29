@@ -269,6 +269,7 @@ function onMove(from, to) {
 
   if (!move) return;
 
+  updateBoard();
   updateStatus();
   updateHistory();
 
