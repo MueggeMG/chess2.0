@@ -99,6 +99,7 @@ if (isMultiplayer) {
     updateBoard();
     updateStatus();
     updateHistory();
+    ground.playPremove();
   });
 
   socket.on('opponent-disconnected-temp', () => {
@@ -223,6 +224,9 @@ const ground = Chessground(document.getElementById('board'), {
     color: isMultiplayer ? myColor : 'white',
     free: false,
     dests: getLegalMoves(),
+  },
+  premovable: {
+    enabled: true,
   },
   events: {
     move: onMove,
