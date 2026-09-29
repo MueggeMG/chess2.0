@@ -490,6 +490,8 @@ function startNewGame() {
       dests: getLegalMoves(),
     },
     turnColor: 'white',
+    check: false,
+    lastMove: undefined,
   });
   overlayBtn.textContent = 'Neues Spiel ↺';
   overlayBtn.disabled = false;
