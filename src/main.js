@@ -96,7 +96,7 @@ if (isMultiplayer) {
       hideOverlay();
     }
     chess.move(move);
-    updateBoard();
+    updateBoard([move.from, move.to]);
     updateStatus();
     updateHistory();
     ground.playPremove();
@@ -193,7 +193,7 @@ stockfish.onmessage = (event) => {
     const to = move.slice(2, 4);
 
     chess.move({ from, to, promotion: 'q' });
-    updateBoard();
+    updateBoard([from, to]);
     updateStatus();
     updateHistory();
 
@@ -245,7 +245,7 @@ function getLegalMoves() {
   return dests;
 }
 
-function updateBoard() {
+function updateBoard(lastMove = undefined) {
   const turn = chess.turn() === 'w' ? 'white' : 'black';
   const canMove = isMultiplayer
     ? turn === myColor
@@ -253,7 +253,7 @@ function updateBoard() {
       : undefined
     : 'white';
 
-  ground.set({
+  const config = {
     fen: chess.fen(),
     movable: {
       color: canMove,
@@ -262,7 +262,11 @@ function updateBoard() {
     },
     turnColor: turn,
     check: chess.inCheck(),
-  });
+  };
+
+  if (lastMove !== undefined) config.lastMove = lastMove;
+
+  ground.set(config);
 }
 
 // =========================================
