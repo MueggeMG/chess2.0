@@ -209,6 +209,7 @@ stockfish.onmessage = (event) => {
     updateBoard([from, to]);
     updateStatus();
     updateHistory();
+    ground.playPremove();
 
     if (chess.isCheckmate()) {
       handleGameOver(
@@ -260,18 +261,27 @@ function getLegalMoves() {
 
 function updateBoard(lastMove = undefined) {
   const turn = chess.turn() === 'w' ? 'white' : 'black';
-  const canMove = isMultiplayer
-    ? turn === myColor
-      ? myColor
-      : undefined
-    : 'white';
+
+  let canMove;
+  let dests;
+
+  if (isMultiplayer) {
+    // Multiplayer: nur ziehen wenn ich dran bin
+    canMove = turn === myColor ? myColor : undefined;
+    dests = canMove ? getLegalMoves() : new Map();
+  } else {
+    // Einzelspieler: Spieler ist immer Weiß
+    // Wenn die Engine dran ist → leere dests, damit Chessground Premoves einreihen kann
+    canMove = 'white';
+    dests = turn === 'white' ? getLegalMoves() : new Map();
+  }
 
   const config = {
     fen: chess.fen(),
     movable: {
       color: canMove,
       free: false,
-      dests: canMove ? getLegalMoves() : new Map(),
+      dests,
     },
     turnColor: turn,
     check: chess.inCheck(),
