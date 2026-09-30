@@ -11,6 +11,22 @@ import './background.js';
 import { io } from 'socket.io-client';
 
 // =========================================
+// SOUNDS
+// =========================================
+const sounds = {
+  move:   new Audio('/chess2.0/sounds/Move.ogg'),
+  capture: new Audio('/chess2.0/sounds/Capture.ogg'),
+  notify: new Audio('/chess2.0/sounds/GenericNotify.ogg'),
+};
+
+function playSound(name) {
+  const s = sounds[name];
+  if (!s) return;
+  s.currentTime = 0;
+  s.play().catch(() => {});
+}
+
+// =========================================
 // URL PARAMETER AUSLESEN
 // =========================================
 const urlParams = new URLSearchParams(window.location.search);
@@ -107,15 +123,18 @@ if (isMultiplayer) {
       disconnectOverlayActive = false;
       hideOverlay();
     }
-    chess.move(move);
+    const applied = chess.move(move);
+    playSound(applied?.captured ? 'capture' : 'move');
     updateBoard([move.from, move.to]);
     updateStatus();
     updateHistory();
     ground.playPremove();
 
     if (chess.isCheckmate()) {
+      playSound('notify');
       handleGameOver('Schachmatt.', 'Du verlierst diese Partie.');
     } else if (chess.isDraw()) {
+      playSound('notify');
       handleGameOver('Remis.', 'Die Partie endet unentschieden');
     }
   });
@@ -211,7 +230,8 @@ stockfish.onmessage = (event) => {
     const from = move.slice(0, 2);
     const to = move.slice(2, 4);
 
-    chess.move({ from, to, promotion: 'q' });
+    const applied = chess.move({ from, to, promotion: 'q' });
+    playSound(applied?.captured ? 'capture' : 'move');
     updateBoard([from, to]);
     updateStatus();
     updateHistory();
@@ -321,6 +341,8 @@ function onMove(from, to) {
 
   if (!move) return;
 
+  playSound(move.captured ? 'capture' : 'move');
+
   updateBoard();
   updateStatus();
   updateHistory();
@@ -329,9 +351,11 @@ function onMove(from, to) {
     socket.emit('move', { roomId, move });
 
     if (chess.isCheckmate()) {
+      playSound('notify');
       handleGameOver('Schachmatt!', 'Du gewinnst diese Partie · Glückwunsch!');
     }
     if (chess.isDraw()) {
+      playSound('notify');
       handleGameOver('Remis.', 'Die Partie endet unentschieden');
     }
   } else {
