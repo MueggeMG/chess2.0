@@ -406,7 +406,7 @@ nav.scrolled {
 #undoBtn,
 #redoBtn,
 #surrenderBtn {
-  width: 33.33%;
+  flex: 1;
   padding: 12px 8px;
   background: transparent;
   border: 1px solid var(--border-subtle);
