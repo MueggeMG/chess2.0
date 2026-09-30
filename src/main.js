@@ -284,12 +284,12 @@ function updateBoard(lastMove = undefined) {
   };
 
   if (isMultiplayer) {
-    // Multiplayer: nur ziehen wenn ich dran bin
-    const canMove = turn === myColor ? myColor : undefined;
+    // Multiplayer: color immer myColor, sonst schlägt isPremovable fehl.
+    // Wer ziehen darf, wird über turnColor+dests gesteuert, nicht über color.
     config.movable = {
-      color: canMove,
+      color: myColor,
       free: false,
-      dests: canMove ? getLegalMoves() : new Map(),
+      dests: turn === myColor ? getLegalMoves() : new Map(),
     };
   } else {
     // Einzelspieler: Spieler ist immer Weiß
