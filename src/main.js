@@ -13,10 +13,11 @@ import { io } from 'socket.io-client';
 // =========================================
 // SOUNDS
 // =========================================
+const BASE = import.meta.env.BASE_URL; // z.B. '/chess2.0/'
 const sounds = {
-  move:   new Audio('/chess2.0/sounds/Move.ogg'),
-  capture: new Audio('/chess2.0/sounds/Capture.ogg'),
-  notify: new Audio('/chess2.0/sounds/GenericNotify.ogg'),
+  move:    new Audio(BASE + 'sounds/Move.ogg'),
+  capture: new Audio(BASE + 'sounds/Capture.ogg'),
+  notify:  new Audio(BASE + 'sounds/GenericNotify.ogg'),
 };
 
 function playSound(name) {
@@ -342,7 +343,6 @@ function onMove(from, to) {
   if (!move) return;
 
   playSound(move.captured ? 'capture' : 'move');
-
   updateBoard();
   updateStatus();
   updateHistory();
@@ -351,11 +351,9 @@ function onMove(from, to) {
     socket.emit('move', { roomId, move });
 
     if (chess.isCheckmate()) {
-      playSound('notify');
       handleGameOver('Schachmatt!', 'Du gewinnst diese Partie · Glückwunsch!');
     }
     if (chess.isDraw()) {
-      playSound('notify');
       handleGameOver('Remis.', 'Die Partie endet unentschieden');
     }
   } else {
