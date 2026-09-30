@@ -259,6 +259,21 @@ function getLegalMoves() {
   return dests;
 }
 
+// Liefert eine Map mit allen von Weiß besetzten Feldern → leere Arrays.
+// Wird während des Engine-Zugs verwendet, damit Chessground die weißen
+// Figuren als interaktiv (premovable) markiert, ohne echte Züge zu erlauben.
+function getWhiteDests() {
+  const dests = new Map();
+  chess.board().forEach((row) => {
+    row.forEach((sq) => {
+      if (sq && sq.color === 'w') {
+        dests.set(sq.square, []);
+      }
+    });
+  });
+  return dests;
+}
+
 function updateBoard(lastMove = undefined) {
   const turn = chess.turn() === 'w' ? 'white' : 'black';
 
@@ -278,13 +293,12 @@ function updateBoard(lastMove = undefined) {
     };
   } else {
     // Einzelspieler: Spieler ist immer Weiß
-    // Wenn Weiß am Zug → legale Züge setzen
-    // Wenn Engine am Zug → dests NICHT übergeben, Chessground behält alte Werte
-    // → Figuren bleiben selektierbar (isMovable bleibt true) → Premoves funktionieren
+    // Wenn Engine am Zug → getWhiteDests() übergeben, damit Chessground
+    // weiße Figuren als premovable kennzeichnet (Figuren bleiben anklickbar).
     config.movable = {
       color: 'white',
       free: false,
-      ...(turn === 'white' ? { dests: getLegalMoves() } : {}),
+      dests: turn === 'white' ? getLegalMoves() : getWhiteDests(),
     };
   }
 
