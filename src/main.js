@@ -13,10 +13,11 @@ import { io } from 'socket.io-client';
 // =========================================
 // SOUNDS
 // =========================================
+const BASE = import.meta.env.BASE_URL; // z.B. '/chess2.0/'
 const sounds = {
-  move:   new Audio('/chess2.0/sounds/Move.ogg'),
-  capture: new Audio('/chess2.0/sounds/Capture.ogg'),
-  notify: new Audio('/chess2.0/sounds/GenericNotify.ogg'),
+  move:    new Audio(BASE + 'sounds/Move.ogg'),
+  capture: new Audio(BASE + 'sounds/Capture.ogg'),
+  notify:  new Audio(BASE + 'sounds/GenericNotify.ogg'),
 };
 
 function playSound(name) {
@@ -91,7 +92,6 @@ function getUndoCount(requesterColor) {
 // =========================================
 let socket = null;
 let disconnectOverlayActive = false;
-let isGameOver = false;
 
 if (isMultiplayer) {
   socket = io('https://chess2-0-server.onrender.com');
@@ -141,7 +141,6 @@ if (isMultiplayer) {
   });
 
   socket.on('opponent-disconnected-temp', () => {
-    if (isGameOver) return;
     disconnectOverlayActive = true;
     showOverlay(
       'Gegner offline.',
@@ -344,7 +343,6 @@ function onMove(from, to) {
   if (!move) return;
 
   playSound(move.captured ? 'capture' : 'move');
-
   updateBoard();
   updateStatus();
   updateHistory();
@@ -353,11 +351,9 @@ function onMove(from, to) {
     socket.emit('move', { roomId, move });
 
     if (chess.isCheckmate()) {
-      playSound('notify');
       handleGameOver('Schachmatt!', 'Du gewinnst diese Partie · Glückwunsch!');
     }
     if (chess.isDraw()) {
-      playSound('notify');
       handleGameOver('Remis.', 'Die Partie endet unentschieden');
     }
   } else {
@@ -403,7 +399,6 @@ function hideOverlay() {
 }
 
 function handleGameOver(title, sub) {
-  isGameOver = true;
   showOverlay(title, sub);
 
   if (isMultiplayer) {
@@ -447,6 +442,13 @@ document.querySelectorAll('.diff-item').forEach((item) => {
 let redoStack = [];
 
 document.getElementById('undoBtn').addEventListener('click', () => {
+  // Erst möglich, wenn der anfragende Spieler selbst mindestens einen Zug gemacht hat
+  const requesterColor = isMultiplayer ? myColor : 'white';
+  const hasMovedYet = chess.history({ verbose: true }).some(
+    m => (m.color === 'w' ? 'white' : 'black') === requesterColor
+  );
+  if (!hasMovedYet) return;
+
   if (isMultiplayer) {
     socket.emit('undo-request', { roomId });
   } else {
@@ -561,7 +563,6 @@ function updateHistory() {
 function startNewGame() {
   chess.reset();
   redoStack = [];
-  isGameOver = false;
   hideOverlay();
   ground.set({
     fen: chess.fen(),

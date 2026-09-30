@@ -619,9 +619,11 @@ nav.scrolled {
   color: var(--gold);
 }
 
-.request-btn.accept:hover {
-  background: var(--gold);
-  color: var(--black);
+@media (hover: hover) {
+  .request-btn.accept:hover {
+    background: var(--gold);
+    color: var(--black);
+  }
 }
 
 .request-btn.decline {
@@ -629,9 +631,11 @@ nav.scrolled {
   color: var(--gray);
 }
 
-.request-btn.decline:hover {
-  border-color: #e25555;
-  color: #e25555;
+@media (hover: hover) {
+  .request-btn.decline:hover {
+    border-color: #e25555;
+    color: #e25555;
+  }
 }
 
 /* FOOTER */
