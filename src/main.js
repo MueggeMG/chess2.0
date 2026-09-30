@@ -13,11 +13,10 @@ import { io } from 'socket.io-client';
 // =========================================
 // SOUNDS
 // =========================================
-const BASE = import.meta.env.BASE_URL; // z.B. '/chess2.0/'
 const sounds = {
-  move:    new Audio(BASE + 'sounds/Move.ogg'),
-  capture: new Audio(BASE + 'sounds/Capture.ogg'),
-  notify:  new Audio(BASE + 'sounds/GenericNotify.ogg'),
+  move:   new Audio('/chess2.0/sounds/Move.ogg'),
+  capture: new Audio('/chess2.0/sounds/Capture.ogg'),
+  notify: new Audio('/chess2.0/sounds/GenericNotify.ogg'),
 };
 
 function playSound(name) {
@@ -92,6 +91,7 @@ function getUndoCount(requesterColor) {
 // =========================================
 let socket = null;
 let disconnectOverlayActive = false;
+let isGameOver = false;
 
 if (isMultiplayer) {
   socket = io('https://chess2-0-server.onrender.com');
@@ -124,7 +124,7 @@ if (isMultiplayer) {
       disconnectOverlayActive = false;
       hideOverlay();
     }
-    viewIndex = null; // bei Gegnerzug immer zur aktuellen Stellung springen
+    viewIndex = null;
     const applied = chess.move(move);
     playSound(applied?.captured ? 'capture' : 'move');
     updateBoard([move.from, move.to]);
@@ -142,6 +142,7 @@ if (isMultiplayer) {
   });
 
   socket.on('opponent-disconnected-temp', () => {
+    if (isGameOver) return;
     disconnectOverlayActive = true;
     showOverlay(
       'Gegner offline.',
@@ -343,8 +344,9 @@ function onMove(from, to) {
 
   if (!move) return;
 
-  viewIndex = null; // View-Modus beenden wenn Spieler zieht
+  viewIndex = null;
   playSound(move.captured ? 'capture' : 'move');
+
   updateBoard();
   updateStatus();
   updateHistory();
@@ -353,9 +355,11 @@ function onMove(from, to) {
     socket.emit('move', { roomId, move });
 
     if (chess.isCheckmate()) {
+      playSound('notify');
       handleGameOver('Schachmatt!', 'Du gewinnst diese Partie · Glückwunsch!');
     }
     if (chess.isDraw()) {
+      playSound('notify');
       handleGameOver('Remis.', 'Die Partie endet unentschieden');
     }
   } else {
@@ -401,6 +405,7 @@ function hideOverlay() {
 }
 
 function handleGameOver(title, sub) {
+  isGameOver = true;
   showOverlay(title, sub);
 
   if (isMultiplayer) {
@@ -444,7 +449,6 @@ document.querySelectorAll('.diff-item').forEach((item) => {
 let redoStack = [];
 let viewIndex = null; // null = aktuelle Stellung, Zahl = historische Zugansicht
 
-// Zeigt eine vergangene Stellung auf dem Brett (nur lokal, ändert chess nicht)
 function viewMove(index) {
   const history = chess.history({ verbose: true });
   if (!history.length) return;
@@ -461,13 +465,27 @@ function viewMove(index) {
   updateHistory();
 }
 
-// Zurück zur aktuellen Spielstellung
 function exitViewMode() {
   viewIndex = null;
   updateBoard();
   updateStatus();
   updateHistory();
 }
+
+document.getElementById('histPrevBtn').addEventListener('click', () => {
+  const history = chess.history();
+  if (!history.length) return;
+  const current = viewIndex !== null ? viewIndex : history.length - 1;
+  if (current > 0) viewMove(current - 1);
+  else viewMove(0);
+});
+
+document.getElementById('histNextBtn').addEventListener('click', () => {
+  const history = chess.history();
+  if (viewIndex === null || !history.length) return;
+  if (viewIndex >= history.length - 1) exitViewMode();
+  else viewMove(viewIndex + 1);
+});
 
 document.getElementById('undoBtn').addEventListener('click', () => {
   // Erst möglich, wenn der anfragende Spieler selbst mindestens einen Zug gemacht hat
@@ -499,21 +517,6 @@ document.getElementById('redoBtn').addEventListener('click', () => {
   updateBoard();
   updateStatus();
   updateHistory();
-});
-
-// Zughistorie Navigation
-document.getElementById('histPrevBtn').addEventListener('click', () => {
-  const history = chess.history();
-  if (!history.length) return;
-  const current = viewIndex !== null ? viewIndex : history.length - 1;
-  viewMove(current - 1);
-});
-
-document.getElementById('histNextBtn').addEventListener('click', () => {
-  const history = chess.history();
-  if (viewIndex === null || !history.length) return;
-  if (viewIndex >= history.length - 1) exitViewMode();
-  else viewMove(viewIndex + 1);
 });
 
 document.getElementById('surrenderBtn').addEventListener('click', () => {
@@ -583,7 +586,6 @@ function updateHistory() {
     return;
   }
 
-  // Welcher Zug ist aktiv hervorgehoben?
   const activeIdx = viewIndex !== null ? viewIndex : moves.length - 1;
 
   let html = '';
@@ -601,12 +603,10 @@ function updateHistory() {
 
   histEl.innerHTML = html;
 
-  // Klick auf Zug → direkt zu dieser Stellung springen
   histEl.querySelectorAll('.h-move[data-idx]').forEach(el => {
     el.addEventListener('click', () => viewMove(parseInt(el.dataset.idx)));
   });
 
-  // Scroll: aktiven Zug sichtbar halten
   const activeEl = histEl.querySelector('.latest');
   if (activeEl) activeEl.scrollIntoView({ block: 'nearest' });
   else histEl.scrollTop = histEl.scrollHeight;
@@ -617,6 +617,7 @@ function startNewGame() {
   chess.reset();
   redoStack = [];
   viewIndex = null;
+  isGameOver = false;
   hideOverlay();
   ground.set({
     fen: chess.fen(),
