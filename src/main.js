@@ -112,6 +112,12 @@ if (isMultiplayer) {
     updateStatus();
     updateHistory();
     ground.playPremove();
+
+    if (chess.isCheckmate()) {
+      handleGameOver('Schachmatt.', 'Du verlierst diese Partie.');
+    } else if (chess.isDraw()) {
+      handleGameOver('Remis.', 'Die Partie endet unentschieden');
+    }
   });
 
   socket.on('opponent-disconnected-temp', () => {
