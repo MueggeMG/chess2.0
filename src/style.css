@@ -556,9 +556,44 @@ nav.scrolled {
 }
 .h-move {
   color: rgba(245, 243, 238, 0.75);
+  border-radius: 3px;
+  padding: 1px 3px;
+}
+.h-move[data-idx] {
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .h-move[data-idx]:hover {
+    background: rgba(201, 168, 76, 0.12);
+    color: var(--gold-light);
+  }
 }
 .h-move.latest {
   color: var(--gold-light);
+  background: rgba(201, 168, 76, 0.15);
+}
+
+#history-nav {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+#history-nav button {
+  flex: 1;
+  background: transparent;
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  color: rgba(245, 243, 238, 0.5);
+  border-radius: 6px;
+  padding: 4px 0;
+  font-size: 11px;
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+@media (hover: hover) {
+  #history-nav button:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
 }
 
 
