@@ -29,6 +29,10 @@
 /* =========================================
           LAYOUT
 ========================================= */
+html {
+  scroll-padding-top: 80px;
+}
+
 body {
   background: var(--black);
   color: var(--white);
@@ -740,9 +744,13 @@ footer {
     text-align: center;
   }
 
+  html {
+    scroll-padding-top: 70px;
+  }
+
   #game-layout {
     grid-template-columns: 1fr;
-    margin-top: 100px;
+    margin-top: 90px;
   }
 
   #sidebar-left,

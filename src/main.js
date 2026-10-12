@@ -617,10 +617,16 @@ function updateHistory() {
     el.addEventListener('click', () => viewMove(parseInt(el.dataset.idx)));
   });
 
-  // Scroll: aktiven Zug sichtbar halten
+  // Scroll: aktiven Zug sichtbar halten (nur innerhalb des Containers, nicht die Seite)
   const activeEl = histEl.querySelector('.latest');
-  if (activeEl) activeEl.scrollIntoView({ block: 'nearest' });
-  else histEl.scrollTop = histEl.scrollHeight;
+  if (activeEl) {
+    const top = activeEl.offsetTop;
+    const bottom = top + activeEl.offsetHeight;
+    if (top < histEl.scrollTop) histEl.scrollTop = top;
+    else if (bottom > histEl.scrollTop + histEl.clientHeight) histEl.scrollTop = bottom - histEl.clientHeight;
+  } else {
+    histEl.scrollTop = histEl.scrollHeight;
+  }
 }
 
 // Neues Spiel starten
