@@ -515,7 +515,8 @@ nav.scrolled {
 
 #undoBtn,
 #redoBtn,
-#surrenderBtn {
+#surrenderBtn,
+#drawBtn {
   flex: 1;
   padding: 12px 8px;
   background: transparent;
@@ -552,6 +553,16 @@ nav.scrolled {
 #surrenderBtn:hover {
   border-color: rgba(210, 45, 45, 0.4);
   color: #e25555;
+}
+
+#drawBtn:hover {
+  border-color: rgba(201, 168, 76, 0.4);
+  color: var(--gold);
+}
+
+#drawBtn.draw-available {
+  border-color: rgba(201, 168, 76, 0.5);
+  color: var(--gold);
 }
 
 #newGameBtn {

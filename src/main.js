@@ -157,6 +157,8 @@ if (isMultiplayer) {
         'Du gewinnst diese Partie!',
         false,
       );
+    } else if (action === 'draw-claim') {
+      handleGameOver('Remis.', 'Dreifache Stellungswiederholung — Remis beansprucht.');
     }
   });
 
@@ -192,6 +194,30 @@ if (isMultiplayer) {
     }
   });
 
+  // Gegner bietet Remis an
+  socket.on('draw-requested', () => {
+    showRequestBanner('Gegner bietet Remis an', (accepted) => {
+      socket.emit('draw-response', { roomId, accepted });
+      if (accepted) {
+        handleGameOver('Remis.', 'Einigung auf Remis.');
+      }
+    });
+  });
+
+  // Antwort auf eigenes Remis-Angebot
+  socket.on('draw-answered', ({ accepted }) => {
+    const drawBtn = document.getElementById('drawBtn');
+    drawBtn.style.opacity = '1';
+    drawBtn.style.pointerEvents = 'all';
+
+    if (accepted) {
+      handleGameOver('Remis.', 'Dein Gegner hat das Remis akzeptiert.');
+    } else {
+      showOverlay('Abgelehnt.', 'Dein Gegner hat das Remis-Angebot abgelehnt.');
+      setTimeout(hideOverlay, 2000);
+    }
+  });
+
   // Game bei neuem Laden auf den aktuellen Stand setzen
   socket.on('restore-game', ({ moves }) => {
     chess.reset();
@@ -204,6 +230,7 @@ if (isMultiplayer) {
     if (!chess.isGameOver()) {
       isGameOver = false;
       document.getElementById('surrenderBtn').style.display = 'block';
+      document.getElementById('drawBtn').style.display = 'block';
       document.getElementById('undoBtn').style.borderRight = '';
       const newGameBtn = document.getElementById('newGameBtn');
       newGameBtn.style.display = 'none';
@@ -455,6 +482,7 @@ function handleGameOver(title, sub) {
 
   if (isMultiplayer) {
     document.getElementById('surrenderBtn').style.display = 'none';
+    document.getElementById('drawBtn').style.display = 'none';
     const newGameBtn = document.getElementById('newGameBtn');
     newGameBtn.style.display = 'block';
     newGameBtn.textContent = 'Neues Spiel anfragen ↺';
@@ -574,6 +602,23 @@ document.getElementById('surrenderBtn').addEventListener('click', () => {
   }
 });
 
+document.getElementById('drawBtn').addEventListener('click', () => {
+  if (!isMultiplayer || !socket) return;
+
+  // Dreifache Stellungswiederholung: kein Gegner-OK nötig
+  if (chess.isThreefoldRepetition()) {
+    handleGameOver('Remis.', 'Dreifache Stellungswiederholung — Remis beansprucht.');
+    socket.emit('game-action', { roomId, action: 'draw-claim' });
+    return;
+  }
+
+  // Normales Remis-Angebot
+  const drawBtn = document.getElementById('drawBtn');
+  drawBtn.style.opacity = '0.4';
+  drawBtn.style.pointerEvents = 'none';
+  socket.emit('draw-request', { roomId });
+});
+
 document.getElementById('newGameBtn').addEventListener('click', () => {
   if (isMultiplayer) {
     socket.emit('new-game-request', { roomId });
@@ -690,6 +735,7 @@ function startNewGame() {
 
   if (isMultiplayer) {
     document.getElementById('surrenderBtn').style.display = 'block';
+    document.getElementById('drawBtn').style.display = 'block';
     document.getElementById('newGameBtn').style.display = 'none';
   }
 
@@ -714,6 +760,8 @@ if (isMultiplayer) {
   document.getElementById('difficulty').style.display = 'none';
   document.getElementById('newGameBtn').style.display = 'none';
   document.getElementById('redoBtn').style.display = 'none';
+} else {
+  document.getElementById('drawBtn').style.display = 'none';
 }
 
 updateStatus();
