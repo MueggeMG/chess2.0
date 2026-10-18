@@ -259,6 +259,92 @@ nav.scrolled {
 }
 
 /* =========================================
+   PROMOTION MODAL
+========================================= */
+.promotion-modal {
+  position: absolute;
+  inset: 0;
+  background: var(--overlay-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  z-index: 998;
+}
+
+.promotion-modal.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.promotion-modal.hidden {
+  display: none;
+}
+
+.promotion-box {
+  background: var(--overlay-box-bg);
+  border: 1px solid var(--border-active);
+  padding: 24px 28px;
+  text-align: center;
+}
+
+.promotion-label {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.85;
+  margin-bottom: 16px;
+}
+
+.promotion-pieces {
+  display: flex;
+  gap: 10px;
+}
+
+/* Weiß zieht → helle Figuren */
+.promotion-pieces[data-color="w"] {
+  color: var(--white);
+}
+
+/* Schwarz zieht → gold/warme Figuren (gut lesbar auf dunklem Hintergrund) */
+.promotion-pieces[data-color="b"] {
+  color: var(--gold-light);
+}
+
+.promo-btn {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  padding: 12px 14px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.promo-btn:hover {
+  border-color: var(--gold);
+  background: var(--gold-dim);
+}
+
+.promo-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gray);
+  transition: color 0.2s;
+}
+
+.promo-btn:hover .promo-name {
+  color: var(--gold);
+}
+
+/* =========================================
           SCHWIERIGKEIT
 ========================================= */
 #difficulty {
@@ -695,9 +781,6 @@ footer {
 /* =========================================
    RESPONSIVE
 ========================================= */
-/* =========================================
-   RESPONSIVE
-========================================= */
 @media (max-width: 768px) {
   .request-banner {
     top: 68px;
@@ -769,5 +852,19 @@ footer {
 
   #sidebar-right {
     order: 3;
+  }
+
+  /* Promotion Modal: kleinere Figuren auf Mobile */
+  .promotion-box {
+    padding: 18px 16px;
+  }
+
+  .promo-btn {
+    padding: 10px 10px;
+  }
+
+  .promo-btn svg {
+    width: 36px;
+    height: 47px;
   }
 }

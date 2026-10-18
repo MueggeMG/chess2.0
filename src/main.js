@@ -347,14 +347,45 @@ function updateBoard(lastMove = undefined) {
 }
 
 // =========================================
-//      SPIELERZUG
+//      PROMOTION
 // =========================================
-function onMove(from, to) {
-  const move = chess.move({ from, to, promotion: 'q' });
+const promotionModal = document.getElementById('promotionModal');
+const promotionPieces = document.getElementById('promotionPieces');
 
+function isPawnPromotion(from, to) {
+  const piece = chess.get(from);
+  if (!piece || piece.type !== 'p') return false;
+  return (piece.color === 'w' && to[1] === '8') || (piece.color === 'b' && to[1] === '1');
+}
+
+function showPromotionModal(from, to) {
+  const color = chess.turn(); // 'w' oder 'b' — noch der ziehende Spieler
+  promotionPieces.dataset.color = color;
+  promotionModal.classList.remove('hidden');
+  void promotionModal.offsetWidth; // Reflow für Transition
+  promotionModal.classList.add('visible');
+
+  // Brett sperren während der Auswahl
+  ground.set({ movable: { color: undefined, dests: new Map() } });
+
+  promotionModal.querySelectorAll('.promo-btn').forEach((btn) => {
+    btn.onclick = () => {
+      hidePromotionModal();
+      applyMoveWithPromotion(from, to, btn.dataset.piece);
+    };
+  });
+}
+
+function hidePromotionModal() {
+  promotionModal.classList.remove('visible');
+  setTimeout(() => promotionModal.classList.add('hidden'), 200);
+}
+
+function applyMoveWithPromotion(from, to, promotion) {
+  const move = chess.move({ from, to, promotion });
   if (!move) return;
 
-  viewIndex = null; // View-Modus beenden wenn Spieler zieht
+  viewIndex = null;
   playSound(move.captured ? 'capture' : 'move');
   updateBoard();
   updateStatus();
@@ -362,28 +393,28 @@ function onMove(from, to) {
 
   if (isMultiplayer) {
     socket.emit('move', { roomId, move });
-
-    if (chess.isCheckmate()) {
-      handleGameOver('Schachmatt!', 'Du gewinnst diese Partie · Glückwunsch!');
-    }
-    if (chess.isDraw()) {
-      handleGameOver('Remis.', 'Die Partie endet unentschieden');
-    }
+    if (chess.isCheckmate()) handleGameOver('Schachmatt!', 'Du gewinnst diese Partie · Glückwunsch!');
+    if (chess.isDraw()) handleGameOver('Remis.', 'Die Partie endet unentschieden');
   } else {
-    if (chess.isCheckmate()) {
-      handleGameOver('Schachmatt.', 'Du gewinnst diese Partie · Glückwunsch!');
-      return;
-    }
-    if (chess.isDraw()) {
-      handleGameOver('Remis.', 'Die Partie endet unentschieden');
-      return;
-    }
+    if (chess.isCheckmate()) { handleGameOver('Schachmatt.', 'Du gewinnst diese Partie · Glückwunsch!'); return; }
+    if (chess.isDraw()) { handleGameOver('Remis.', 'Die Partie endet unentschieden'); return; }
     if (!chess.isGameOver()) {
       stockfish.postMessage(`setoption name Skill Level value ${skillLevel}`);
       stockfish.postMessage('position fen ' + chess.fen());
       stockfish.postMessage(`go movetime ${moveTime}`);
     }
   }
+}
+
+// =========================================
+//      SPIELERZUG
+// =========================================
+function onMove(from, to) {
+  if (isPawnPromotion(from, to)) {
+    showPromotionModal(from, to);
+    return;
+  }
+  applyMoveWithPromotion(from, to, 'q'); // promotion-Argument irrelevant für Nicht-Bauern
 }
 
 // =========================================
