@@ -361,6 +361,14 @@ function isPawnPromotion(from, to) {
 function showPromotionModal(from, to) {
   const color = chess.turn(); // 'w' oder 'b' — noch der ziehende Spieler
   promotionPieces.dataset.color = color;
+
+  // Figuren-Farbe auf die echten Chessground-Piece-Elemente setzen
+  const colorName = color === 'w' ? 'white' : 'black';
+  promotionModal.querySelectorAll('.promo-piece-wrap piece').forEach((el) => {
+    el.classList.remove('white', 'black');
+    el.classList.add(colorName);
+  });
+
   promotionModal.classList.remove('hidden');
   void promotionModal.offsetWidth; // Reflow für Transition
   promotionModal.classList.add('visible');

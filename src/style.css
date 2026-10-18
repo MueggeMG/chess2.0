@@ -304,14 +304,21 @@ nav.scrolled {
   gap: 10px;
 }
 
-/* Weiß zieht → helle Figuren */
-.promotion-pieces[data-color="w"] {
-  color: var(--white);
+.promo-piece-wrap {
+  width: 45px;
+  height: 45px;
+  position: relative;
+  pointer-events: none;
 }
 
-/* Schwarz zieht → gold/warme Figuren (gut lesbar auf dunklem Hintergrund) */
-.promotion-pieces[data-color="b"] {
-  color: var(--gold-light);
+.promo-piece-wrap piece {
+  display: block;
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  pointer-events: none;
 }
 
 .promo-btn {
