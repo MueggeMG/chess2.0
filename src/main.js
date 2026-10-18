@@ -135,9 +135,19 @@ if (isMultiplayer) {
     if (chess.isCheckmate()) {
       playSound('notify');
       handleGameOver('Schachmatt.', 'Du verlierst diese Partie.');
-    } else if (chess.isDraw()) {
+    } else if (chess.isDraw() && !chess.isThreefoldRepetition()) {
       playSound('notify');
       handleGameOver('Remis.', 'Die Partie endet unentschieden');
+    }
+    // Dreifache Stellungswiederholung: Button highlighten, kein Auto-Remis
+    const drawBtnOpp = document.getElementById('drawBtn');
+    if (drawBtnOpp) {
+      if (chess.isThreefoldRepetition()) {
+        playSound('notify');
+        drawBtnOpp.classList.add('draw-available');
+      } else {
+        drawBtnOpp.classList.remove('draw-available');
+      }
     }
   });
 
@@ -429,7 +439,15 @@ function applyMoveWithPromotion(from, to, promotion) {
   if (isMultiplayer) {
     socket.emit('move', { roomId, move });
     if (chess.isCheckmate()) handleGameOver('Schachmatt!', 'Du gewinnst diese Partie · Glückwunsch!');
-    if (chess.isDraw()) handleGameOver('Remis.', 'Die Partie endet unentschieden');
+    else if (chess.isDraw() && !chess.isThreefoldRepetition()) handleGameOver('Remis.', 'Die Partie endet unentschieden');
+    // Dreifache Stellungswiederholung: Button highlighten, kein Auto-Remis
+    const drawBtnOwn = document.getElementById('drawBtn');
+    if (chess.isThreefoldRepetition()) {
+      playSound('notify');
+      drawBtnOwn.classList.add('draw-available');
+    } else {
+      drawBtnOwn.classList.remove('draw-available');
+    }
   } else {
     if (chess.isCheckmate()) { handleGameOver('Schachmatt.', 'Du gewinnst diese Partie · Glückwunsch!'); return; }
     if (chess.isDraw()) { handleGameOver('Remis.', 'Die Partie endet unentschieden'); return; }
@@ -479,6 +497,8 @@ function hideOverlay() {
 
 function handleGameOver(title, sub) {
   showOverlay(title, sub);
+  ground.set({ movable: { color: undefined, dests: new Map() } });
+  document.getElementById('drawBtn')?.classList.remove('draw-available');
 
   if (isMultiplayer) {
     document.getElementById('surrenderBtn').style.display = 'none';
