@@ -117,6 +117,19 @@ nav.scrolled {
   position: absolute;
 }
 
+.bg-piece-wrap {
+  position: relative;
+  opacity: 0.38;
+}
+
+.bg-piece-wrap piece {
+  display: block;
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 @keyframes fall {
   from {
     top: -150px;
@@ -264,7 +277,7 @@ nav.scrolled {
 .promotion-modal {
   position: absolute;
   inset: 0;
-  background: var(--overlay-bg);
+  background: rgba(10, 10, 10, 0.52);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -284,7 +297,7 @@ nav.scrolled {
 }
 
 .promotion-box {
-  background: var(--overlay-box-bg);
+  background: #1e1b12;
   border: 1px solid var(--border-active);
   padding: 24px 28px;
   text-align: center;
