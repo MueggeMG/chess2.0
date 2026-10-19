@@ -427,3 +427,23 @@ body {
   margin-top: 10px;
   letter-spacing: 0.06em;
 }
+
+/* Solo-Sektion */
+.solo-start {
+  display: flex;
+  justify-content: center;
+  padding-top: 8px;
+}
+
+.solo-start .btn-primary {
+  min-width: 200px;
+}
+
+.diff-btn .diff-label {
+  font-size: 13px;
+  letter-spacing: 0.1em;
+}
+
+.diff-btn {
+  min-height: 52px;
+}

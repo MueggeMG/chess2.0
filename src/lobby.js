@@ -227,3 +227,39 @@ socket.on('game-start', ({ white, black, time, inc }) => {
   // Zur Spielseite weiterleiten mit Raumcode, Farbe und Zeitkontrolle
   window.location.href = `/chess2.0/game.html?room=${currentRoom}&color=${myColor}&time=${time}&inc=${inc}`;
 });
+
+// =========================================
+// SCHWIERIGKEIT & GEGEN COMPUTER
+// =========================================
+const SKILL_LEVELS = [
+  { skill: 2,  time: 100,  label: 'Anfänger' },
+  { skill: 10, time: 500,  label: 'Mittel'   },
+  { skill: 16, time: 1000, label: 'Stark'    },
+  { skill: 20, time: 2000, label: 'Meister'  },
+];
+let selectedDiff = SKILL_LEVELS[1]; // Default: Mittel
+
+const diffGrid = document.getElementById('diffGrid');
+const soloBtn  = document.getElementById('soloBtn');
+
+function renderDiffGrid() {
+  diffGrid.innerHTML = '';
+  SKILL_LEVELS.forEach((d) => {
+    const btn = document.createElement('button');
+    btn.className = 'tc-btn diff-btn' + (d === selectedDiff ? ' active' : '');
+    btn.innerHTML = `<span class="tc-cat diff-label">${d.label}</span>`;
+    btn.addEventListener('click', () => {
+      selectedDiff = d;
+      renderDiffGrid();
+    });
+    diffGrid.appendChild(btn);
+  });
+}
+renderDiffGrid();
+
+soloBtn.addEventListener('click', () => {
+  const time  = selectedTC.mins * 60;
+  const inc   = selectedTC.inc;
+  const skill = selectedDiff.skill;
+  window.location.href = `/chess2.0/game.html?skill=${skill}&time=${time}&inc=${inc}`;
+});

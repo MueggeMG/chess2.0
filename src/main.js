@@ -38,8 +38,9 @@ const isMultiplayer = !!roomId;
 // =========================================
 // ZEITKONTROLLE — Spieluhr
 // =========================================
-const timeParam = parseInt(urlParams.get('time') || '0');
-const incParam  = parseInt(urlParams.get('inc')  || '0');
+const timeParam  = parseInt(urlParams.get('time')  || '0');
+const incParam   = parseInt(urlParams.get('inc')   || '0');
+const skillParam = parseInt(urlParams.get('skill') || '10');
 const opponentColor = myColor === 'white' ? 'black' : 'white';
 
 const clockTopEl      = document.getElementById('clockTop');
@@ -366,8 +367,9 @@ if (isMultiplayer) {
 const stockfish = new Worker('/chess2.0/stockfish.js');
 
 let engineReady = false;
-let skillLevel = 10;
-let moveTime = 500;
+const SKILL_MOVE_TIMES = { 2: 100, 10: 500, 16: 1000, 20: 2000 };
+let skillLevel = skillParam;
+let moveTime   = SKILL_MOVE_TIMES[skillParam] ?? 500;
 
 stockfish.onmessage = (event) => {
   const msg = event.data;
@@ -639,7 +641,13 @@ overlayBtn.addEventListener('click', () => {
 // =========================================
 //        SCHWIERIGKEIT
 // =========================================
+// Aktiven Schwierigkeitsgrad aus URL-Param setzen
 document.querySelectorAll('.diff-item').forEach((item) => {
+  const s = parseInt(item.dataset.skill);
+  if (s === skillLevel) {
+    document.querySelectorAll('.diff-item').forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+  }
   item.addEventListener('click', () => {
     document
       .querySelectorAll('.diff-item')
