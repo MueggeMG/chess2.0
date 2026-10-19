@@ -132,7 +132,7 @@ nav.scrolled {
 
 @keyframes fall {
   from {
-    top: -150px;
+    top: -900px;
   }
   to {
     top: 110vh;

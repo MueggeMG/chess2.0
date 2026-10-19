@@ -32,7 +32,7 @@ cfg.forEach((c, i) => {
   div.style.cssText = `left:${c.x}; animation: fall ${FD}s linear ${c.fd}s infinite;`;
   div.innerHTML = `
     <div class="cg-wrap bg-piece-wrap"
-         style="width:${c.sz}px; height:${h}px; animation: ${c.ra} ${c.rd}s linear ${c.fd}s infinite;">
+         style="width:${c.sz}px; height:${h}px;">
       <piece class="${c.t} ${color}"></piece>
     </div>`;
   sg.appendChild(div);
