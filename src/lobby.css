@@ -447,3 +447,9 @@ body {
 .diff-btn {
   min-height: 52px;
 }
+
+.tc-section-desc {
+  font-size: 13px;
+  color: var(--clr-muted, #888);
+  margin: -4px 0 8px;
+}

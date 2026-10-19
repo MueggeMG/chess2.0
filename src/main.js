@@ -34,6 +34,8 @@ const urlParams = new URLSearchParams(window.location.search);
 const roomId = urlParams.get('room');
 const myColor = urlParams.get('color') || 'white';
 const isMultiplayer = !!roomId;
+const isHotSeat   = urlParams.get('mode') === 'hotseat';
+const isSolo      = !isMultiplayer && !isHotSeat; // vs Stockfish
 
 // =========================================
 // ZEITKONTROLLE — Spieluhr
@@ -130,6 +132,9 @@ if (timeParam > 0) {
   if (isMultiplayer) {
     clockCatTopEl.textContent = opponentColor === 'white' ? 'Weiß' : 'Schwarz';
     clockCatBotEl.textContent = myColor === 'white' ? 'Weiß (Du)' : 'Schwarz (Du)';
+  } else if (isHotSeat) {
+    clockCatTopEl.textContent = 'Schwarz';
+    clockCatBotEl.textContent = 'Weiß';
   } else {
     clockCatTopEl.textContent = 'Schwarz';
     clockCatBotEl.textContent = 'Weiß (Du)';
@@ -364,14 +369,14 @@ if (isMultiplayer) {
 // =========================================
 //      STOCKFISH ENGINE — Web Worker
 // =========================================
-const stockfish = new Worker('/chess2.0/stockfish.js');
+const stockfish = isSolo ? new Worker('/chess2.0/stockfish.js') : null;
 
 let engineReady = false;
 const SKILL_MOVE_TIMES = { 2: 100, 10: 500, 16: 1000, 20: 2000 };
 let skillLevel = skillParam;
 let moveTime   = SKILL_MOVE_TIMES[skillParam] ?? 500;
 
-stockfish.onmessage = (event) => {
+if (stockfish) stockfish.onmessage = (event) => {
   const msg = event.data;
 
   if (msg === 'uciok') {
@@ -413,7 +418,7 @@ stockfish.onmessage = (event) => {
   }
 };
 
-stockfish.postMessage('uci');
+if (stockfish) stockfish.postMessage('uci');
 
 // =========================================
 //      CHESSGROUND — Brett Darstellung
@@ -478,6 +483,14 @@ function updateBoard(lastMove = undefined) {
       free: false,
       dests: turn === myColor ? getLegalMoves() : new Map(),
     };
+  } else if (isHotSeat) {
+    // Hot-Seat: der aktuelle Spieler darf ziehen, Brett dreht sich nach Zug
+    config.movable = {
+      color: turn,
+      free: false,
+      dests: getLegalMoves(),
+    };
+    config.orientation = turn;
   } else {
     // Einzelspieler: Spieler ist immer Weiß
     // Wenn Engine am Zug → getWhiteDests() übergeben, damit Chessground
@@ -563,6 +576,12 @@ function applyMoveWithPromotion(from, to, promotion) {
     } else {
       drawBtnOwn.classList.remove('draw-available');
     }
+  } else if (isHotSeat) {
+    // Hot-Seat: Spieler wechseln, kein Stockfish
+    const winner = chess.turn() === 'w' ? 'Schwarz' : 'Weiß';
+    if (chess.isCheckmate()) { handleGameOver('Schachmatt!', winner + ' gewinnt diese Partie!'); return; }
+    if (chess.isDraw())      { handleGameOver('Remis.',      'Die Partie endet unentschieden');  return; }
+    // Nichts weiter – updateBoard() hat bereits das Brett gedreht
   } else {
     if (chess.isCheckmate()) { handleGameOver('Schachmatt.', 'Du gewinnst diese Partie · Glückwunsch!'); return; }
     if (chess.isDraw()) { handleGameOver('Remis.', 'Die Partie endet unentschieden'); return; }
@@ -699,6 +718,17 @@ document.getElementById('undoBtn').addEventListener('click', () => {
 
   if (isMultiplayer) {
     socket.emit('undo-request', { roomId });
+  } else if (isHotSeat) {
+    // Hot-Seat: den letzten Zug des aktuellen Spielers rückgängig machen
+    const lastMover = chess.turn() === 'w' ? 'black' : 'white';
+    const count = getUndoCount(lastMover);
+    for (let i = 0; i < count; i++) {
+      const move = chess.undo();
+      if (move) redoStack.push(move);
+    }
+    updateBoard();
+    updateStatus();
+    updateHistory();
   } else {
     const count = getUndoCount('white');
     for (let i = 0; i < count; i++) {
@@ -866,6 +896,7 @@ function startNewGame() {
   hideOverlay();
   ground.set({
     fen: chess.fen(),
+    orientation: isHotSeat ? 'white' : (isMultiplayer ? myColor : 'white'),
     movable: {
       color: isMultiplayer ? myColor : 'white',
       free: false,
@@ -905,6 +936,10 @@ if (isMultiplayer) {
   document.getElementById('difficulty').style.display = 'none';
   document.getElementById('newGameBtn').style.display = 'none';
   document.getElementById('redoBtn').style.display = 'none';
+} else if (isHotSeat) {
+  document.getElementById('difficulty').style.display = 'none';
+  document.getElementById('drawBtn').style.display = 'none';
+  document.getElementById('surrenderBtn').style.display = 'none';
 } else {
   document.getElementById('drawBtn').style.display = 'none';
 }

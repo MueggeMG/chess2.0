@@ -263,3 +263,10 @@ soloBtn.addEventListener('click', () => {
   const skill = selectedDiff.skill;
   window.location.href = `/chess2.0/game.html?skill=${skill}&time=${time}&inc=${inc}`;
 });
+
+const hotSeatBtn = document.getElementById('hotSeatBtn');
+hotSeatBtn.addEventListener('click', () => {
+  const time = selectedTC.mins * 60;
+  const inc  = selectedTC.inc;
+  window.location.href = `/chess2.0/game.html?mode=hotseat&time=${time}&inc=${inc}`;
+});
