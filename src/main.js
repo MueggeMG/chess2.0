@@ -972,6 +972,9 @@ if (isMultiplayer && timeParam > 0) {
   });
   giftBtn.addEventListener('click', () => {
     socket.emit('game-action', { roomId, action: 'give-time', data: { seconds: giftSeconds } });
+    clockMs[opponentColor] += giftSeconds * 1000;
+    renderClocks();
+    showGiftToast('Gegner +' + giftSeconds + ' s');
   });
 }
 
