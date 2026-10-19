@@ -232,10 +232,10 @@ socket.on('game-start', ({ white, black, time, inc }) => {
 // SCHWIERIGKEIT & GEGEN COMPUTER
 // =========================================
 const SKILL_LEVELS = [
-  { skill: 2,  time: 100,  label: 'Anfänger' },
-  { skill: 10, time: 500,  label: 'Mittel'   },
-  { skill: 16, time: 1000, label: 'Stark'    },
-  { skill: 20, time: 2000, label: 'Meister'  },
+  { skill: 2,  time: 50,   label: 'Anfänger' },
+  { skill: 10, time: 250,  label: 'Mittel'   },
+  { skill: 16, time: 500,  label: 'Stark'    },
+  { skill: 20, time: 1000, label: 'Meister'  },
 ];
 let selectedDiff = SKILL_LEVELS[1]; // Default: Mittel
 

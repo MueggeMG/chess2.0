@@ -372,7 +372,7 @@ if (isMultiplayer) {
 const stockfish = isSolo ? new Worker('/chess2.0/stockfish.js') : null;
 
 let engineReady = false;
-const SKILL_MOVE_TIMES = { 2: 100, 10: 500, 16: 1000, 20: 2000 };
+const SKILL_MOVE_TIMES = { 2: 50,  10: 250, 16: 500,  20: 1000 };
 let skillLevel = skillParam;
 let moveTime   = SKILL_MOVE_TIMES[skillParam] ?? 500;
 
