@@ -309,3 +309,121 @@ body {
     width: min(320px, 88vw);
   }
 }
+
+/* =========================================
+   ZEITKONTROLLE
+   ========================================= */
+.tc-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 700px;
+}
+
+.tc-section-label {
+  font-size: 10px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.tc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+.tc-btn {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  color: var(--white);
+  padding: 18px 10px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.tc-btn:hover {
+  background: var(--gold-dim);
+  border-color: rgba(201, 168, 76, 0.45);
+}
+
+.tc-btn.active {
+  background: var(--gold-dim);
+  border-color: var(--gold);
+}
+
+.tc-time {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 300;
+  color: var(--white);
+  line-height: 1;
+}
+
+.tc-btn.active .tc-time {
+  color: var(--gold-light);
+}
+
+.tc-cat {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--gray);
+  text-transform: uppercase;
+}
+
+.tc-btn.active .tc-cat {
+  color: var(--gold);
+  opacity: 0.85;
+}
+
+/* Custom */
+.tc-custom {
+  width: 100%;
+}
+
+.tc-custom-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.tc-custom-inner input {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--white);
+  font-family: 'DM Mono', monospace;
+  font-size: 20px;
+  letter-spacing: 0.05em;
+  padding: 10px 14px;
+  width: 90px;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.tc-custom-inner input:focus {
+  border-color: var(--gold);
+}
+
+.tc-custom-plus {
+  color: var(--gray);
+  font-size: 22px;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.tc-custom-hint {
+  font-size: 11px;
+  color: var(--gray);
+  text-align: center;
+  margin-top: 10px;
+  letter-spacing: 0.06em;
+}

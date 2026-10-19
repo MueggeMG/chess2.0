@@ -36,6 +36,107 @@ const myColor = urlParams.get('color') || 'white';
 const isMultiplayer = !!roomId;
 
 // =========================================
+// ZEITKONTROLLE — Spieluhr
+// =========================================
+const timeParam = parseInt(urlParams.get('time') || '0');
+const incParam  = parseInt(urlParams.get('inc')  || '0');
+const opponentColor = myColor === 'white' ? 'black' : 'white';
+
+const clockTopEl      = document.getElementById('clockTop');
+const clockBottomEl   = document.getElementById('clockBottom');
+const clockTimeTopEl  = document.getElementById('clockTimeTop');
+const clockTimeBotEl  = document.getElementById('clockTimeBottom');
+const clockCatTopEl   = document.getElementById('clockCatTop');
+const clockCatBotEl   = document.getElementById('clockCatBottom');
+
+let clockMs     = { white: timeParam * 1000, black: timeParam * 1000 };
+let clockInt    = null;
+let clockActive = null; // 'white' | 'black' | null
+const topColor    = opponentColor;
+const bottomColor = myColor;
+
+function fmtClock(ms) {
+  if (ms <= 0) return '0:00';
+  if (ms < 10000) {
+    const s  = Math.floor(ms / 1000);
+    const ds = Math.floor((ms % 1000) / 100);
+    return `${s}.${ds}`;
+  }
+  const totalSecs = Math.ceil(ms / 1000);
+  const mins = Math.floor(totalSecs / 60);
+  const secs = totalSecs % 60;
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+function renderClockSide(color) {
+  const isTop  = color === topColor;
+  const el     = isTop ? clockTopEl     : clockBottomEl;
+  const timeEl = isTop ? clockTimeTopEl : clockTimeBotEl;
+  const ms     = clockMs[color];
+  timeEl.textContent = fmtClock(ms);
+  timeEl.className   = 'clock-time' +
+    (ms < 10000 ? ' critical' : ms < 30000 ? ' warning' : '');
+  el.classList.toggle('active', color === clockActive);
+}
+
+function renderClocks() {
+  renderClockSide('white');
+  renderClockSide('black');
+}
+
+function stopClock() {
+  if (clockInt) { clearInterval(clockInt); clockInt = null; }
+  clockActive = null;
+  if (timeParam > 0) renderClocks();
+}
+
+function startClockFor(color) {
+  if (clockInt) clearInterval(clockInt);
+  clockActive = color;
+  let lastTick = Date.now();
+  clockInt = setInterval(() => {
+    const now   = Date.now();
+    const delta = now - lastTick;
+    lastTick    = now;
+    clockMs[color] = Math.max(0, clockMs[color] - delta);
+    renderClockSide(color);
+    if (clockMs[color] <= 0) {
+      stopClock();
+      onTimeout(color);
+    }
+  }, 50);
+  renderClocks();
+}
+
+function clockAfterMove(movedColor) {
+  clockMs[movedColor] += incParam * 1000;
+  startClockFor(movedColor === 'white' ? 'black' : 'white');
+}
+
+function onTimeout(color) {
+  const sub = color === myColor
+    ? 'Deine Zeit ist abgelaufen.'
+    : 'Zeit des Gegners abgelaufen. Du gewinnst!';
+  handleGameOver('Zeit abgelaufen.', sub);
+  if (isMultiplayer && socket) {
+    socket.emit('game-action', { roomId, action: 'timeout', color });
+  }
+}
+
+if (timeParam > 0) {
+  clockTopEl.classList.remove('hidden');
+  clockBottomEl.classList.remove('hidden');
+  if (isMultiplayer) {
+    clockCatTopEl.textContent = opponentColor === 'white' ? 'Weiß' : 'Schwarz';
+    clockCatBotEl.textContent = myColor === 'white' ? 'Weiß (Du)' : 'Schwarz (Du)';
+  } else {
+    clockCatTopEl.textContent = 'Schwarz';
+    clockCatBotEl.textContent = 'Weiß (Du)';
+  }
+  renderClocks();
+}
+
+// =========================================
 //      SPIELLOGIK — chess.js
 // =========================================
 const chess = new Chess();
@@ -131,6 +232,10 @@ if (isMultiplayer) {
     updateStatus();
     updateHistory();
     ground.playPremove();
+
+    if (timeParam > 0 && !chess.isGameOver()) {
+      clockAfterMove(opponentColor);
+    }
 
     if (chess.isCheckmate()) {
       playSound('notify');
@@ -287,6 +392,10 @@ stockfish.onmessage = (event) => {
     updateHistory();
     ground.playPremove();
 
+    if (timeParam > 0 && !chess.isGameOver()) {
+      clockAfterMove(chess.turn() === 'w' ? 'black' : 'white');
+    }
+
     if (chess.isCheckmate()) {
       handleGameOver(
         'Schachmatt.',
@@ -436,6 +545,10 @@ function applyMoveWithPromotion(from, to, promotion) {
   updateStatus();
   updateHistory();
 
+  if (timeParam > 0 && !chess.isGameOver()) {
+    clockAfterMove(chess.turn() === 'w' ? 'black' : 'white');
+  }
+
   if (isMultiplayer) {
     socket.emit('move', { roomId, move });
     if (chess.isCheckmate()) handleGameOver('Schachmatt!', 'Du gewinnst diese Partie · Glückwunsch!');
@@ -496,6 +609,7 @@ function hideOverlay() {
 }
 
 function handleGameOver(title, sub) {
+  stopClock();
   showOverlay(title, sub);
   ground.set({ movable: { color: undefined, dests: new Map() } });
   document.getElementById('drawBtn')?.classList.remove('draw-available');
@@ -738,6 +852,9 @@ function startNewGame() {
   chess.reset();
   redoStack = [];
   viewIndex = null;
+  stopClock();
+  clockMs = { white: timeParam * 1000, black: timeParam * 1000 };
+  if (timeParam > 0) renderClocks();
   hideOverlay();
   ground.set({
     fen: chess.fen(),

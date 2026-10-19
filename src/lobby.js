@@ -103,6 +103,64 @@ document.querySelectorAll('button, .lobby-card').forEach((el) => {
 });
 
 // =========================================
+// ZEITKONTROLLE
+// =========================================
+const TIME_CONTROLS = [
+  { mins: 1,  inc: 0,  cat: 'Bullet'         },
+  { mins: 2,  inc: 1,  cat: 'Bullet'         },
+  { mins: 3,  inc: 0,  cat: 'Blitz'          },
+  { mins: 3,  inc: 2,  cat: 'Blitz'          },
+  { mins: 5,  inc: 0,  cat: 'Blitz'          },
+  { mins: 5,  inc: 3,  cat: 'Blitz'          },
+  { mins: 10, inc: 0,  cat: 'Schnellschach'  },
+  { mins: 10, inc: 5,  cat: 'Schnellschach'  },
+  { mins: 15, inc: 10, cat: 'Schnellschach'  },
+  { mins: 30, inc: 0,  cat: 'Klassisch'      },
+  { mins: 30, inc: 20, cat: 'Klassisch'      },
+  { custom: true,      cat: 'Andere Spielzeit' },
+];
+
+let selectedTC = TIME_CONTROLS[6]; // Default: 10+0 Schnellschach
+
+const tcGrid    = document.getElementById('tcGrid');
+const tcCustom  = document.getElementById('tcCustom');
+const tcMinsEl  = document.getElementById('tcMins');
+const tcIncEl   = document.getElementById('tcInc');
+const tcCustomOk = document.getElementById('tcCustomOk');
+
+function renderTCGrid() {
+  tcGrid.innerHTML = '';
+  TIME_CONTROLS.forEach((tc) => {
+    const btn = document.createElement('button');
+    btn.className = 'tc-btn' + (tc === selectedTC ? ' active' : '');
+    if (tc.custom) {
+      btn.innerHTML = `<span class="tc-cat">${tc.cat}</span>`;
+    } else {
+      btn.innerHTML = `<span class="tc-time">${tc.mins}+${tc.inc}</span><span class="tc-cat">${tc.cat}</span>`;
+    }
+    btn.addEventListener('click', () => {
+      selectedTC = tc;
+      if (tc.custom) {
+        tcCustom.classList.remove('hidden');
+      } else {
+        tcCustom.classList.add('hidden');
+      }
+      renderTCGrid();
+    });
+    tcGrid.appendChild(btn);
+  });
+}
+renderTCGrid();
+
+tcCustomOk.addEventListener('click', () => {
+  const m = Math.max(1, parseInt(tcMinsEl.value) || 10);
+  const s = Math.max(0, parseInt(tcIncEl.value)  || 0);
+  selectedTC = { mins: m, inc: s, cat: 'Benutzerdefiniert', custom: false };
+  tcCustom.classList.add('hidden');
+  renderTCGrid();
+});
+
+// =========================================
 // LOBBY LOGIK
 // =========================================
 const createBtn = document.getElementById('createBtn');
@@ -118,7 +176,7 @@ let myColor = null;
 
 // Raum erstellen
 createBtn.addEventListener('click', () => {
-  socket.emit('create-room');
+  socket.emit('create-room', { time: selectedTC.mins * 60, inc: selectedTC.inc });
   createBtn.disabled = true;
   createBtn.textContent = 'Erstelle Raum...';
 });
@@ -164,8 +222,8 @@ socket.on('error', (msg) => {
 });
 
 // Spiel startet
-socket.on('game-start', ({ white, black }) => {
+socket.on('game-start', ({ white, black, time, inc }) => {
   myColor = socket.id === white ? 'white' : 'black';
-  // Zur Spielseite weiterleiten mit Raumcode und Farbe
-  window.location.href = `/chess2.0/game.html?room=${currentRoom}&color=${myColor}`;
+  // Zur Spielseite weiterleiten mit Raumcode, Farbe und Zeitkontrolle
+  window.location.href = `/chess2.0/game.html?room=${currentRoom}&color=${myColor}&time=${time}&inc=${inc}`;
 });

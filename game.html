@@ -77,6 +77,14 @@
     </div>
 
     <div id="container">
+      <!-- Spieluhr oben (Gegner) -->
+      <div class="clock hidden" id="clockTop">
+        <span class="clock-cat" id="clockCatTop">Gegner</span>
+        <span class="clock-time" id="clockTimeTop">—</span>
+      </div>
+
+      <!-- Brett + Overlays -->
+      <div id="board-wrap">
       <div id="board"></div>
 
       <!-- Promotion Modal -->
@@ -121,6 +129,13 @@
           <div class="overlay-sub" id="overlaySub">Die Engine gewinnt</div>
           <button class="overlay-btn" id="overlayBtn">Neues Spiel ↺</button>
         </div>
+      </div>
+      </div><!-- end board-wrap -->
+
+      <!-- Spieluhr unten (eigene Uhr) -->
+      <div class="clock hidden" id="clockBottom">
+        <span class="clock-time" id="clockTimeBottom">—</span>
+        <span class="clock-cat" id="clockCatBottom">Du</span>
       </div>
     </div>
 

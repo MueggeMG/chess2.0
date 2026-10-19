@@ -33,6 +33,21 @@
             </h1>
         </div>
 
+        <!-- Zeitkontrolle -->
+        <section class="tc-section">
+            <p class="tc-section-label">Zeitkontrolle</p>
+            <div class="tc-grid" id="tcGrid"></div>
+            <div class="tc-custom hidden" id="tcCustom">
+                <div class="tc-custom-inner">
+                    <input type="number" id="tcMins" min="1" max="180" value="10" />
+                    <span class="tc-custom-plus">+</span>
+                    <input type="number" id="tcInc" min="0" max="60" value="0" />
+                    <button class="btn-primary" id="tcCustomOk">OK →</button>
+                </div>
+                <p class="tc-custom-hint">Minuten + Inkrement (Sekunden)</p>
+            </div>
+        </section>
+
         <div class="lobby-actions">
 
             <!-- Neues Spiel -->

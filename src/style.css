@@ -177,6 +177,12 @@ nav.scrolled {
           BRETT
 ========================================= */
 #container {
+  display: flex;
+  flex-direction: column;
+  width: min(560px, 88vw);
+}
+
+#board-wrap {
   position: relative;
   width: min(560px, 88vw);
   height: min(560px, 88vw);
@@ -899,4 +905,53 @@ footer {
     width: 36px;
     height: 47px;
   }
+}
+
+/* =========================================
+          SPIELUHR
+========================================= */
+.clock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.clock.active {
+  border-color: var(--gold);
+  background: var(--gold-dim);
+}
+
+.clock-time {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  color: var(--gray);
+  font-variant-numeric: tabular-nums;
+  transition: color 0.2s;
+}
+
+.clock.active .clock-time {
+  color: var(--gold-light);
+}
+
+.clock-time.warning  { color: #c87820; }
+.clock-time.critical { color: #b83030; }
+
+.clock-cat {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gray);
+  opacity: 0.55;
+}
+
+.clock.active .clock-cat {
+  color: var(--gold);
+  opacity: 0.8;
 }
