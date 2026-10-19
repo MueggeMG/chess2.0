@@ -115,6 +115,7 @@ nav.scrolled {
 
 .pw {
   position: absolute;
+  transform: translateX(-50%);
 }
 
 .bg-piece-wrap {
