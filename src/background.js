@@ -1,8 +1,8 @@
 const FD = 17;
 
 // Abwechselnd weiß/schwarz für Tiefe – auf dunklem Hintergrund v.a. weiße Figuren sichtbar
-const COLORS = ['white','white','black','white','white','black','white',
-                 'white','black','white','black','white','white','black','white'];
+const COLORS = ['white','white','white','white','white','white','white',
+                 'white','white','white','white','white','white','white','white'];
 
 const cfg = [
   { t: 'pawn',   x: '2%',  sz: 375, ra: 'rcw',  rd: 11, fd: 0   },
