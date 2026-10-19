@@ -83,6 +83,19 @@
         <span class="clock-time" id="clockTimeTop">—</span>
       </div>
 
+      <!-- Zeit schenken (nur Multiplayer) -->
+      <div class="gift-time-row hidden" id="giftTimeRow">
+        <div class="gift-stepper">
+          <button class="gift-step" id="giftMinus">−</button>
+          <span class="gift-display" id="giftDisplay">15 s</span>
+          <button class="gift-step" id="giftPlus">+</button>
+        </div>
+        <button class="gift-btn" id="giftBtn">Zeit schenken</button>
+      </div>
+
+      <!-- Toast für empfangene Zeit -->
+      <div class="gift-toast hidden" id="giftToast"></div>
+
       <!-- Brett + Overlays -->
       <div id="board-wrap">
       <div id="board"></div>

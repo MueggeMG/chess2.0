@@ -955,3 +955,90 @@ footer {
   color: var(--gold);
   opacity: 0.8;
 }
+
+/* ---- Zeit schenken Widget ---- */
+.gift-time-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.gift-time-row.hidden { display: none; }
+
+.gift-stepper {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.gift-step {
+  background: transparent;
+  border: none;
+  color: var(--gold);
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  line-height: 1;
+  padding: 3px 7px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.gift-step:hover { background: var(--gold-dim); }
+
+.gift-display {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--gray);
+  min-width: 32px;
+  text-align: center;
+  padding: 0 2px;
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  line-height: 22px;
+}
+
+.gift-btn {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--gold);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.gift-btn:hover {
+  background: var(--gold-dim);
+  border-color: var(--gold);
+}
+
+/* ---- Zeit-Toast ---- */
+.gift-toast {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(20, 17, 12, 0.92);
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  color: var(--gold-light, #e8c97a);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  padding: 8px 16px;
+  pointer-events: none;
+  z-index: 50;
+  transition: opacity 0.4s;
+}
+
+.gift-toast.hidden { display: none; }

@@ -53,6 +53,7 @@ const clockCatTopEl   = document.getElementById('clockCatTop');
 const clockCatBotEl   = document.getElementById('clockCatBottom');
 
 let clockMs     = { white: timeParam * 1000, black: timeParam * 1000 };
+let giftSeconds = 15;
 let clockInt    = null;
 let clockActive = null; // 'white' | 'black' | null
 const topColor    = opponentColor;
@@ -271,7 +272,7 @@ if (isMultiplayer) {
     );
   });
 
-  socket.on('opponent-action', ({ action }) => {
+  socket.on('opponent-action', ({ action, data }) => {
     if (action === 'surrender') {
       handleGameOver(
         'Gegner hat aufgegeben.',
@@ -280,6 +281,11 @@ if (isMultiplayer) {
       );
     } else if (action === 'draw-claim') {
       handleGameOver('Remis.', 'Dreifache Stellungswiederholung — Remis beansprucht.');
+    } else if (action === 'give-time') {
+      clockMs[myColor] += (data?.seconds ?? 15) * 1000;
+      if (timeParam > 0) renderClocks();
+      playSound('notify');
+      showGiftToast('+' + (data?.seconds ?? 15) + ' s geschenkt');
     }
   });
 
@@ -942,6 +948,40 @@ if (isMultiplayer) {
   document.getElementById('surrenderBtn').style.display = 'none';
 } else {
   document.getElementById('drawBtn').style.display = 'none';
+}
+
+// --- Zeit schenken ---
+if (isMultiplayer && timeParam > 0) {
+  const giftRow     = document.getElementById('giftTimeRow');
+  const giftDisplay = document.getElementById('giftDisplay');
+  const giftMinus   = document.getElementById('giftMinus');
+  const giftPlus    = document.getElementById('giftPlus');
+  const giftBtn     = document.getElementById('giftBtn');
+
+  giftRow.classList.remove('hidden');
+
+  const updateGiftDisplay = () => { giftDisplay.textContent = giftSeconds + ' s'; };
+
+  giftMinus.addEventListener('click', () => {
+    giftSeconds = Math.max(5, giftSeconds - 5);
+    updateGiftDisplay();
+  });
+  giftPlus.addEventListener('click', () => {
+    giftSeconds = Math.min(60, giftSeconds + 5);
+    updateGiftDisplay();
+  });
+  giftBtn.addEventListener('click', () => {
+    socket.emit('game-action', { roomId, action: 'give-time', data: { seconds: giftSeconds } });
+  });
+}
+
+function showGiftToast(msg) {
+  const el = document.getElementById('giftToast');
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.remove('hidden');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.add('hidden'), 2500);
 }
 
 updateStatus();
