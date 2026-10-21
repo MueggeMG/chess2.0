@@ -93,13 +93,8 @@ body {
   aspect-ratio: 1;
   border-radius: calc(var(--board-radius) * 0.7);
   overflow: hidden;
-  background: repeating-conic-gradient(var(--sq1) 0% 25%, var(--sq2) 0% 50%) 0 0 / 25% 25%;
+  background: var(--sq1);
 }
-.hb-grid cg-board square.last-move { background-color: var(--hl); }
-.hb-grid cg-board square.check {
-  background: radial-gradient(ellipse at center, rgba(220, 60, 60, 0.85) 0%, rgba(220, 60, 60, 0) 70%);
-}
-.hb-grid cg-board piece { filter: drop-shadow(0 0 0.6px rgba(255, 255, 255, 0.55)); }
 
 /* =========================================
    GEMEINSAME KOMPONENTEN

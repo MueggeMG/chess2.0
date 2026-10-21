@@ -71,10 +71,6 @@
   --n2: '02';
   --n3: '03';
 
-  --sq1: #d8c9a3;
-  --sq2: #3b3125;
-  --hl: rgba(201, 168, 76, 0.5);
-  --dot: rgba(10, 10, 10, 0.5);
   --board-pad: 0;
   --board-border: none;
   --board-radius: 0;
@@ -83,17 +79,25 @@
   /* abgeleitet: Kompatibilität mit style.css (Spielseite) */
   --gold: var(--accent);
   --gold-light: var(--accent-2);
-  --gold-dim: color-mix(in srgb, var(--accent) 15%, transparent);
+  --gold-dim: color-mix(in srgb, var(--accent) 15%, var(--bg));
   --white: var(--fg);
   --black: var(--bg);
   --gray: var(--muted);
-  --border: color-mix(in srgb, var(--accent) 25%, transparent);
-  --border-subtle: color-mix(in srgb, var(--accent) 15%, transparent);
-  --border-hover: color-mix(in srgb, var(--accent) 40%, transparent);
-  --border-active: color-mix(in srgb, var(--accent) 50%, transparent);
+  --border: color-mix(in srgb, var(--accent) 25%, var(--bg));
+  --border-subtle: color-mix(in srgb, var(--accent) 22%, var(--bg));
+  --border-hover: color-mix(in srgb, var(--accent) 45%, var(--bg));
+  --border-active: color-mix(in srgb, var(--accent) 60%, var(--bg));
   --overlay-bg: color-mix(in srgb, var(--bg) 90%, transparent);
   --overlay-box-bg: var(--dialog-bg);
-  --nav-bg: color-mix(in srgb, var(--bg) 92%, transparent);
+  --nav-bg: var(--bg);
+  --panel: color-mix(in srgb, var(--fg) 5%, var(--bg));
+  --sq1: #f0d9b5;
+  --sq2: #b58863;
+  --hl: #dcc255;
+  --sel: #efd36b;
+  --dot: #3b2a14;
+  --dot-edge: #f6e9c8;
+  --piece-filter: none;
 }
 
 /* B Turnierpapier */
@@ -144,11 +148,14 @@
   --num-display: block;
   --num-font: var(--f-display);
   --num-size: 30px;
+  --board-border: 6px solid #17382e;
   --sq1: #e6dcc0;
   --sq2: #2f7a63;
-  --hl: rgba(217, 196, 138, 0.55);
-  --dot: rgba(23, 56, 46, 0.55);
-  --board-border: 6px solid #17382e;
+  --hl: #cdbf5e;
+  --sel: #e0d070;
+  --dot: #14302a;
+  --dot-edge: #f1ead0;
+  --piece-filter: none;
 }
 
 /* C Bento Dunkel */
@@ -196,6 +203,13 @@
   --radius-lg: 20px;
   --bg-anim: none;
   --code-color: var(--accent);
+  --sq1: #c7d3d4;
+  --sq2: #2b5058;
+  --hl: #39b59a;
+  --sel: #4fd1b5;
+  --dot: #0a0d12;
+  --dot-edge: #dff3ef;
+  --piece-filter: drop-shadow(0 0 0.6px rgba(255, 255, 255, 0.55));
 }
 
 /* D Clean Hell */
@@ -246,12 +260,15 @@
   --radius-lg: 16px;
   --bg-anim: none;
   --code-color: var(--accent);
-  --sq1: #e4e9f1;
-  --sq2: #a9b8d0;
-  --hl: rgba(47, 91, 234, 0.4);
-  --dot: rgba(15, 23, 42, 0.35);
   --board-radius: 14px;
   --board-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
+  --sq1: #e4e9f1;
+  --sq2: #a9b8d0;
+  --hl: #8ea8f2;
+  --sel: #6f93f0;
+  --dot: #1b2f78;
+  --dot-edge: #eef2ff;
+  --piece-filter: none;
 }
 
 /* E Clean Dunkel */
@@ -302,12 +319,15 @@
   --radius-lg: 16px;
   --bg-anim: none;
   --code-color: var(--accent);
-  --sq1: #2c323e;
-  --sq2: #1a1e26;
-  --hl: rgba(255, 122, 61, 0.5);
-  --dot: rgba(242, 244, 248, 0.35);
   --board-border: 1px solid #262b35;
   --board-radius: 14px;
+  --sq1: #2c323e;
+  --sq2: #1a1e26;
+  --hl: #d9622b;
+  --sel: #ff7a3d;
+  --dot: #ff7a3d;
+  --dot-edge: #0f1115;
+  --piece-filter: drop-shadow(0 0 0.6px rgba(255, 255, 255, 0.55));
 }
 
 /* F Schwarz & Gold (edel) */
@@ -363,12 +383,15 @@
   --n1: '01';
   --n2: '02';
   --n3: '03';
-  --sq1: #d8c9a3;
-  --sq2: #3b3125;
-  --hl: rgba(200, 169, 106, 0.55);
-  --dot: rgba(20, 17, 13, 0.55);
   --board-pad: 10px;
   --board-border: 1px solid #c8a96a;
+  --sq1: #d8c9a3;
+  --sq2: #3b3125;
+  --hl: #a6853f;
+  --sel: #c8a96a;
+  --dot: #c8a96a;
+  --dot-edge: #14110d;
+  --piece-filter: drop-shadow(0 0 0.6px rgba(255, 255, 255, 0.55));
 }
 
 /* G Bordeaux & Elfenbein (edel) */
@@ -421,12 +444,15 @@
   --num-style: italic;
   --num-color: #8f6f2f;
   --num-size: 40px;
-  --sq1: #eadcc3;
-  --sq2: #7a3341;
-  --hl: rgba(217, 189, 127, 0.6);
-  --dot: rgba(42, 26, 29, 0.45);
   --board-pad: 10px;
   --board-border: 1px solid #d9bd7f;
+  --sq1: #eadcc3;
+  --sq2: #7a3341;
+  --hl: #c9a45a;
+  --sel: #d9bd7f;
+  --dot: #2a1a1d;
+  --dot-edge: #f5efe4;
+  --piece-filter: none;
 }
 
 /* H Marine & Silber (edel) */
@@ -480,12 +506,15 @@
   --n1: '1';
   --n2: '2';
   --n3: '3';
-  --sq1: #dbe3f1;
-  --sq2: #4a6290;
-  --hl: rgba(20, 33, 61, 0.5);
-  --dot: rgba(238, 241, 246, 0.8);
   --board-pad: 10px;
   --board-border: 1px solid #aab8d4;
+  --sq1: #dbe3f1;
+  --sq2: #4a6290;
+  --hl: #8ea3d4;
+  --sel: #aab8d4;
+  --dot: #14213d;
+  --dot-edge: #eef1f6;
+  --piece-filter: none;
 }
 
 /* =========================================
@@ -609,4 +638,63 @@
 @media (max-width: 420px) {
   .settings-dialog { padding: 20px; }
   .theme-grid { gap: 8px; }
+}
+
+/* =========================================
+   SCHACHBRETT (Spielseite + Lobby-Brett)
+   Felder und Markierungen sind komplett deckend.
+========================================= */
+cg-board {
+  background-color: var(--sq1);
+}
+/* dunkle Felder als Maske: a1 unten links ist dunkel */
+cg-board::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--sq2);
+  -webkit-mask: var(--dark-squares) center / 100% 100% no-repeat;
+  mask: var(--dark-squares) center / 100% 100% no-repeat;
+}
+:root {
+  --dark-squares: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath d='M1 0h1v1h-1zM3 0h1v1h-1zM5 0h1v1h-1zM7 0h1v1h-1zM0 1h1v1h-1zM2 1h1v1h-1zM4 1h1v1h-1zM6 1h1v1h-1zM1 2h1v1h-1zM3 2h1v1h-1zM5 2h1v1h-1zM7 2h1v1h-1zM0 3h1v1h-1zM2 3h1v1h-1zM4 3h1v1h-1zM6 3h1v1h-1zM1 4h1v1h-1zM3 4h1v1h-1zM5 4h1v1h-1zM7 4h1v1h-1zM0 5h1v1h-1zM2 5h1v1h-1zM4 5h1v1h-1zM6 5h1v1h-1zM1 6h1v1h-1zM3 6h1v1h-1zM5 6h1v1h-1zM7 6h1v1h-1zM0 7h1v1h-1zM2 7h1v1h-1zM4 7h1v1h-1zM6 7h1v1h-1z'/%3E%3C/svg%3E");
+}
+cg-board piece { filter: var(--piece-filter, none); }
+
+cg-board square.last-move { background-color: var(--hl); }
+cg-board square.selected { background-color: var(--sel); }
+cg-board square.current-premove { background-color: var(--sel); }
+cg-board square.move-dest {
+  background: radial-gradient(var(--dot) 0 19%, var(--dot-edge) 20% 25%, transparent 26%);
+}
+cg-board square.premove-dest {
+  background: radial-gradient(var(--sel) 0 19%, var(--dot-edge) 20% 25%, transparent 26%);
+}
+cg-board square.oc.move-dest,
+cg-board square.oc.premove-dest {
+  background: radial-gradient(transparent 0 78%, var(--dot) 78% 90%, var(--dot-edge) 90%);
+}
+cg-board square.move-dest:hover,
+cg-board square.premove-dest:hover { background: var(--sel); }
+cg-board square.check {
+  background: radial-gradient(circle at center, #ff5c5c 0%, #d64545 55%, #b83232 100%);
+}
+
+/* Koordinaten: auf hellen Feldern dunkel, auf dunklen Feldern hell */
+.orientation-white .ranks :nth-child(odd),
+.orientation-white .files :nth-child(even),
+.orientation-black .ranks :nth-child(even),
+.orientation-black .files :nth-child(odd),
+coords.squares:nth-of-type(odd) :nth-child(even),
+coords.squares:nth-of-type(even) :nth-child(odd) {
+  color: var(--sq2);
+}
+.orientation-white .ranks :nth-child(even),
+.orientation-white .files :nth-child(odd),
+.orientation-black .ranks :nth-child(odd),
+.orientation-black .files :nth-child(even),
+coords.squares:nth-of-type(odd) :nth-child(odd),
+coords.squares:nth-of-type(even) :nth-child(even) {
+  color: var(--sq1);
 }

@@ -370,7 +370,6 @@ nav.scrolled {
   text-transform: uppercase;
   color: var(--gold);
   margin-bottom: 10px;
-  opacity: 0.85;
 }
 
 .diff-list {
@@ -386,6 +385,7 @@ nav.scrolled {
   padding: 12px 16px;
   border: 1px solid var(--border-subtle);
   border-bottom: none;
+  background: var(--panel);
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -497,7 +497,6 @@ nav.scrolled {
   text-transform: uppercase;
   color: var(--gold);
   margin-bottom: 10px;
-  opacity: 0.85;
 }
 
 #action-buttons {
@@ -512,7 +511,7 @@ nav.scrolled {
 #drawBtn {
   flex: 1;
   padding: 12px 8px;
-  background: transparent;
+  background: var(--panel);
   border: 1px solid var(--border-subtle);
   border-right: none;
   color: var(--white);
@@ -544,24 +543,24 @@ nav.scrolled {
 }
 
 #surrenderBtn:hover {
-  border-color: rgba(210, 45, 45, 0.4);
+  border-color: color-mix(in srgb, #d22d2d 45%, var(--bg));
   color: #e25555;
 }
 
 #drawBtn:hover {
-  border-color: color-mix(in srgb, var(--gold) 40%, transparent);
+  border-color: color-mix(in srgb, var(--gold) 45%, var(--bg));
   color: var(--gold);
 }
 
 #drawBtn.draw-available {
-  border-color: color-mix(in srgb, var(--gold) 50%, transparent);
+  border-color: color-mix(in srgb, var(--gold) 60%, var(--bg));
   color: var(--gold);
 }
 
 #newGameBtn {
   width: 100%;
   padding: 12px 16px;
-  background: transparent;
+  background: var(--panel);
   border: 1px solid var(--border-subtle);
   border-top: none;
   color: var(--gold);
@@ -593,7 +592,6 @@ nav.scrolled {
   text-transform: uppercase;
   color: var(--gold);
   margin-bottom: 10px;
-  opacity: 0.85;
 }
 
 #status {
@@ -602,6 +600,7 @@ nav.scrolled {
   gap: 10px;
   padding: 10px 16px;
   border: 1px solid var(--border-subtle);
+  background: var(--panel);
   margin-bottom: 1px;
 }
 
@@ -649,10 +648,11 @@ nav.scrolled {
 }
 
 #history {
+  background: var(--panel);
   max-height: 160px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--gold) 30%, transparent) transparent;
+  scrollbar-color: color-mix(in srgb, var(--gold) 40%, var(--panel)) var(--panel);
 }
 
 .h-row {
@@ -660,16 +660,15 @@ nav.scrolled {
   grid-template-columns: 28px 1fr 1fr;
   gap: 4px;
   padding: 5px 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--gold) 6%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--gold) 14%, var(--panel));
   font-size: 11px;
 }
 
 .h-num {
-  color: var(--gold);
-  opacity: 0.45;
+  color: color-mix(in srgb, var(--gold) 55%, var(--panel));
 }
 .h-move {
-  color: color-mix(in srgb, var(--white) 75%, transparent);
+  color: color-mix(in srgb, var(--white) 80%, var(--panel));
   border-radius: 3px;
   padding: 1px 3px;
 }
@@ -678,13 +677,13 @@ nav.scrolled {
 }
 @media (hover: hover) {
   .h-move[data-idx]:hover {
-    background: color-mix(in srgb, var(--gold) 12%, transparent);
+    background: color-mix(in srgb, var(--gold) 16%, var(--panel));
     color: var(--gold-light);
   }
 }
 .h-move.latest {
   color: var(--gold-light);
-  background: color-mix(in srgb, var(--gold) 15%, transparent);
+  background: color-mix(in srgb, var(--gold) 20%, var(--panel));
 }
 
 #history-nav {
@@ -694,9 +693,9 @@ nav.scrolled {
 }
 #history-nav button {
   flex: 1;
-  background: transparent;
-  border: 1px solid color-mix(in srgb, var(--gold) 25%, transparent);
-  color: color-mix(in srgb, var(--white) 50%, transparent);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: color-mix(in srgb, var(--white) 60%, var(--panel));
   border-radius: 6px;
   padding: 4px 0;
   font-size: 11px;
@@ -776,7 +775,7 @@ nav.scrolled {
 }
 
 .request-btn.decline {
-  border-color: color-mix(in srgb, var(--white) 15%, transparent);
+  border-color: color-mix(in srgb, var(--white) 22%, var(--bg));
   color: var(--gray);
 }
 
@@ -902,7 +901,7 @@ footer {
   justify-content: space-between;
   padding: 4px 14px;
   border: 1px solid var(--border);
-  background: color-mix(in srgb, var(--white) 4%, transparent);
+  background: var(--panel);
   transition: border-color 0.2s, background 0.2s;
 }
 
@@ -933,13 +932,11 @@ footer {
   font-size: 10px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--gray);
-  opacity: 0.55;
+  color: color-mix(in srgb, var(--gray) 70%, var(--panel));
 }
 
 .clock.active .clock-cat {
   color: var(--gold);
-  opacity: 0.8;
 }
 
 /* ---- Zeit schenken Widget ---- */
@@ -962,7 +959,7 @@ footer {
 }
 
 .gift-step {
-  background: transparent;
+  background: var(--panel);
   border: none;
   color: var(--gold);
   font-family: var(--f-body);
@@ -989,7 +986,7 @@ footer {
 
 .gift-btn {
   flex: 1;
-  background: transparent;
+  background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 4px;
   color: var(--gold);
