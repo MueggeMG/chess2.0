@@ -1,13 +1,23 @@
 <!doctype html>
-<html lang="de">
+<html lang="de" data-theme="a" data-layout="center">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chess 2.0 – Marcel Graf</title>
+  <script>
+    try {
+      var t = localStorage.getItem('chess2.theme');
+      if (!/^[a-h]$/.test(t)) t = 'a';
+      var r = document.documentElement;
+      r.dataset.theme = t;
+      r.dataset.layout = t === 'a' ? 'center' : t === 'c' ? 'bento' : (t === 'd' || t === 'e') ? 'split-cards' : 'split-ruled';
+    } catch (e) { }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;0,600;1,300;1,500&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Jost:wght@300;400;500&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap"
     rel="stylesheet" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 </head>

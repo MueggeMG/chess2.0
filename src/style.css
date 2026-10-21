@@ -10,21 +10,7 @@
 /* =========================================
           VARIABLES
 ========================================= */
-:root {
-  --gold: #c9a84c;
-  --gold-light: #e8c97a;
-  --gold-dim: rgba(201, 168, 76, 0.15);
-  --white: #f5f3ee;
-  --black: #0a0a0a;
-  --gray: #888888;
-  --border: rgba(201, 168, 76, 0.25);
-  --border-subtle: rgba(201, 168, 76, 0.15);
-  --border-hover: rgba(201, 168, 76, 0.4);
-  --border-active: rgba(201, 168, 76, 0.5);
-  --overlay-bg: rgba(10, 10, 10, 0.88);
-  --overlay-box-bg: #0e0e0e;
-  --nav-bg: rgba(10, 10, 10, 0.92);
-}
+/* Design-Tokens: siehe themes.css */
 
 /* =========================================
           LAYOUT
@@ -36,7 +22,7 @@ html {
 body {
   background: var(--black);
   color: var(--white);
-  font-family: 'DM Mono', monospace;
+  font-family: var(--f-body);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -66,7 +52,7 @@ nav {
 }
 
 .nav-logo {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--f-display);
   font-size: 20px;
   letter-spacing: 0.08em;
   color: var(--gold);
@@ -227,7 +213,7 @@ nav.scrolled {
 }
 
 .overlay-title {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--f-display);
   font-size: 42px;
   font-weight: 300;
   color: var(--gold-light);
@@ -245,7 +231,7 @@ nav.scrolled {
 .overlay-btn {
   margin-top: 28px;
   display: inline-block;
-  font-family: 'DM Mono', monospace;
+  font-family: var(--f-body);
   font-size: 10px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -284,7 +270,7 @@ nav.scrolled {
 .promotion-modal {
   position: absolute;
   inset: 0;
-  background: rgba(10, 10, 10, 0.52);
+  background: color-mix(in srgb, var(--black) 52%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -304,7 +290,7 @@ nav.scrolled {
 }
 
 .promotion-box {
-  background: #1e1b12;
+  background: var(--overlay-box-bg);
   border: 1px solid var(--border-active);
   padding: 24px 28px;
   text-align: center;
@@ -359,7 +345,7 @@ nav.scrolled {
 }
 
 .promo-name {
-  font-family: 'DM Mono', monospace;
+  font-family: var(--f-body);
   font-size: 9px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -466,7 +452,7 @@ nav.scrolled {
   align-items: center;
   justify-content: center;
   margin: 0 auto 12px;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--f-display);
   font-size: 28px;
   font-weight: 300;
   color: var(--gold);
@@ -530,7 +516,7 @@ nav.scrolled {
   border: 1px solid var(--border-subtle);
   border-right: none;
   color: var(--white);
-  font-family: 'DM Mono', monospace;
+  font-family: var(--f-body);
   font-size: 10px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -563,12 +549,12 @@ nav.scrolled {
 }
 
 #drawBtn:hover {
-  border-color: rgba(201, 168, 76, 0.4);
+  border-color: color-mix(in srgb, var(--gold) 40%, transparent);
   color: var(--gold);
 }
 
 #drawBtn.draw-available {
-  border-color: rgba(201, 168, 76, 0.5);
+  border-color: color-mix(in srgb, var(--gold) 50%, transparent);
   color: var(--gold);
 }
 
@@ -579,7 +565,7 @@ nav.scrolled {
   border: 1px solid var(--border-subtle);
   border-top: none;
   color: var(--gold);
-  font-family: 'DM Mono', monospace;
+  font-family: var(--f-body);
   font-size: 10px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -631,11 +617,11 @@ nav.scrolled {
   background: var(--white);
 }
 .status-dot.black {
-  background: #444;
+  background: var(--gray);
 }
 .status-dot.thinking {
   background: var(--gold);
-  box-shadow: 0 0 6px rgba(201, 168, 76, 0.6);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--gold) 60%, transparent);
   animation: pulse 0.9s ease-in-out infinite;
 }
 
@@ -666,7 +652,7 @@ nav.scrolled {
   max-height: 160px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: rgba(201, 168, 76, 0.3) transparent;
+  scrollbar-color: color-mix(in srgb, var(--gold) 30%, transparent) transparent;
 }
 
 .h-row {
@@ -674,7 +660,7 @@ nav.scrolled {
   grid-template-columns: 28px 1fr 1fr;
   gap: 4px;
   padding: 5px 0;
-  border-bottom: 1px solid rgba(201, 168, 76, 0.06);
+  border-bottom: 1px solid color-mix(in srgb, var(--gold) 6%, transparent);
   font-size: 11px;
 }
 
@@ -683,7 +669,7 @@ nav.scrolled {
   opacity: 0.45;
 }
 .h-move {
-  color: rgba(245, 243, 238, 0.75);
+  color: color-mix(in srgb, var(--white) 75%, transparent);
   border-radius: 3px;
   padding: 1px 3px;
 }
@@ -692,13 +678,13 @@ nav.scrolled {
 }
 @media (hover: hover) {
   .h-move[data-idx]:hover {
-    background: rgba(201, 168, 76, 0.12);
+    background: color-mix(in srgb, var(--gold) 12%, transparent);
     color: var(--gold-light);
   }
 }
 .h-move.latest {
   color: var(--gold-light);
-  background: rgba(201, 168, 76, 0.15);
+  background: color-mix(in srgb, var(--gold) 15%, transparent);
 }
 
 #history-nav {
@@ -709,8 +695,8 @@ nav.scrolled {
 #history-nav button {
   flex: 1;
   background: transparent;
-  border: 1px solid rgba(201, 168, 76, 0.25);
-  color: rgba(245, 243, 238, 0.5);
+  border: 1px solid color-mix(in srgb, var(--gold) 25%, transparent);
+  color: color-mix(in srgb, var(--white) 50%, transparent);
   border-radius: 6px;
   padding: 4px 0;
   font-size: 11px;
@@ -766,7 +752,7 @@ nav.scrolled {
 }
 
 .request-btn {
-  font-family: 'DM Mono', monospace;
+  font-family: var(--f-body);
   font-size: 10px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -790,7 +776,7 @@ nav.scrolled {
 }
 
 .request-btn.decline {
-  border-color: rgba(245, 243, 238, 0.15);
+  border-color: color-mix(in srgb, var(--white) 15%, transparent);
   color: var(--gray);
 }
 
@@ -916,7 +902,7 @@ footer {
   justify-content: space-between;
   padding: 4px 14px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.03);
+  background: color-mix(in srgb, var(--white) 4%, transparent);
   transition: border-color 0.2s, background 0.2s;
 }
 
@@ -926,7 +912,7 @@ footer {
 }
 
 .clock-time {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--f-display);
   font-size: 22px;
   font-weight: 300;
   letter-spacing: 0.02em;
@@ -943,7 +929,7 @@ footer {
 .clock-time.critical { color: #b83030; }
 
 .clock-cat {
-  font-family: 'DM Mono', monospace;
+  font-family: var(--f-body);
   font-size: 10px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -979,7 +965,7 @@ footer {
   background: transparent;
   border: none;
   color: var(--gold);
-  font-family: 'DM Mono', monospace;
+  font-family: var(--f-body);
   font-size: 14px;
   line-height: 1;
   padding: 3px 7px;
@@ -990,7 +976,7 @@ footer {
 .gift-step:hover { background: var(--gold-dim); }
 
 .gift-display {
-  font-family: 'DM Mono', monospace;
+  font-family: var(--f-body);
   font-size: 11px;
   color: var(--gray);
   min-width: 32px;
@@ -1007,7 +993,7 @@ footer {
   border: 1px solid var(--border);
   border-radius: 4px;
   color: var(--gold);
-  font-family: 'DM Mono', monospace;
+  font-family: var(--f-body);
   font-size: 10px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1028,11 +1014,11 @@ footer {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: rgba(20, 17, 12, 0.92);
+  background: var(--dialog-bg);
   border: 1px solid var(--gold);
   border-radius: 6px;
   color: var(--gold-light, #e8c97a);
-  font-family: 'DM Mono', monospace;
+  font-family: var(--f-body);
   font-size: 12px;
   letter-spacing: 0.06em;
   padding: 8px 16px;

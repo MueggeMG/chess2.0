@@ -1,14 +1,25 @@
 <!doctype html>
-<html lang="de">
+<html lang="de" data-theme="a" data-layout="center">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chess 2.0</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Design vor dem ersten Rendern setzen (verhindert Flackern) -->
+    <script>
+        try {
+            var t = localStorage.getItem('chess2.theme');
+            if (!/^[a-h]$/.test(t)) t = 'a';
+            var r = document.documentElement;
+            r.dataset.theme = t;
+            r.dataset.layout = t === 'a' ? 'center' : t === 'c' ? 'bento' : (t === 'd' || t === 'e') ? 'split-cards' : 'split-ruled';
+        } catch (e) { }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;0,600;1,300;1,500&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Jost:wght@300;400;500&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Sora:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap"
         rel="stylesheet" />
     <link rel="stylesheet" href="/src/lobby.css" />
 </head>
@@ -17,7 +28,7 @@
 
     <div class="cursor" id="cursor"></div>
 
-    <!-- Hintergrund Animation -->
+    <!-- Hintergrund Animation (nur Design A) -->
     <div id="bg">
         <div class="sg" id="sg"></div>
     </div>
@@ -25,82 +36,125 @@
     <!-- Lobby -->
     <main class="lobby">
 
-        <div class="lobby-hero">
-            <p class="lobby-label">Chess 2.0</p>
-            <h1 class="lobby-title">
-                Bereit für<br>
-                eine Partie <em>Schach?</em>
-            </h1>
-        </div>
-
-        <!-- Zeitkontrolle -->
-        <section class="tc-section">
-            <p class="tc-section-label">Zeitkontrolle</p>
-            <div class="tc-grid" id="tcGrid"></div>
-            <div class="tc-custom hidden" id="tcCustom">
-                <div class="tc-custom-inner">
-                    <input type="number" id="tcMins" min="1" max="180" value="10" />
-                    <span class="tc-custom-plus">+</span>
-                    <input type="number" id="tcInc" min="0" max="60" value="0" />
-                    <button class="btn-primary" id="tcCustomOk">OK →</button>
-                </div>
-                <p class="tc-custom-hint">Minuten + Inkrement (Sekunden)</p>
+        <header class="lobby-hero">
+            <div class="hero-text">
+                <p class="lobby-label">Chess 2.0</p>
+                <span class="hero-rule"></span>
+                <h1 class="lobby-title">
+                    Bereit für<br>
+                    eine Partie <em>Schach?</em>
+                </h1>
             </div>
-        </section>
-
-        <div class="lobby-actions">
-
-            <!-- Neues Spiel -->
-            <div class="lobby-card" id="createCard">
-                <p class="card-label">Neues Spiel</p>
-                <h2 class="card-title">Raum erstellen</h2>
-                <p class="card-desc">Erstelle einen Raum und teile den Code mit deinem Gegner.</p>
-                <button class="btn-primary" id="createBtn">Spiel erstellen →</button>
-                <div class="room-code hidden" id="roomCodeDisplay">
-                    <p class="code-label">Dein Raumcode</p>
-                    <p class="code-value" id="roomCode">------</p>
-                    <p class="code-hint">Teile diesen Code mit deinem Gegner</p>
+            <div class="hero-board" aria-hidden="true">
+                <div class="hb-grid">
+                    <span class="hb hb-a"></span><span class="hb hb-b"></span>
+                    <span class="hb hb-c"></span><span class="hb hb-d"></span>
                 </div>
             </div>
+        </header>
 
-            <!-- Beitreten -->
-            <div class="lobby-card" id="joinCard">
-                <p class="card-label">Beitreten</p>
-                <h2 class="card-title">Raum beitreten</h2>
-                <p class="card-desc">Gib den Code deines Gegners ein um beizutreten.</p>
-                <div class="join-input">
-                    <input type="text" id="roomInput" placeholder="RAUMCODE" maxlength="6" />
-                    <button class="btn-primary" id="joinBtn">Beitreten →</button>
+        <div class="lobby-main">
+
+            <!-- Zeitkontrolle -->
+            <section class="tc-section">
+                <p class="tc-section-label">Zeitkontrolle</p>
+                <div class="tc-grid" id="tcGrid"></div>
+                <div class="tc-custom hidden" id="tcCustom">
+                    <div class="tc-custom-inner">
+                        <input type="number" id="tcMins" min="1" max="180" value="10" aria-label="Minuten" />
+                        <span class="tc-custom-plus">+</span>
+                        <input type="number" id="tcInc" min="0" max="60" value="0" aria-label="Inkrement in Sekunden" />
+                        <button class="btn-primary" id="tcCustomOk">OK →</button>
+                    </div>
+                    <p class="tc-custom-hint">Minuten + Inkrement (Sekunden)</p>
                 </div>
-                <p class="error-msg hidden" id="joinError">Raum nicht gefunden</p>
+            </section>
+
+            <div class="lobby-modes">
+
+                <!-- Online -->
+                <section class="mode mode-online">
+                    <div class="mode-head">
+                        <span class="mode-num" aria-hidden="true"></span>
+                        <div class="mode-text">
+                            <p class="mode-label">Online</p>
+                            <h2 class="mode-title">Online spielen</h2>
+                            <p class="mode-desc">Raum erstellen oder per Code beitreten.</p>
+                        </div>
+                    </div>
+
+                    <div class="lobby-actions">
+                        <!-- Neues Spiel -->
+                        <div class="lobby-card" id="createCard">
+                            <p class="card-label">Neues Spiel</p>
+                            <h2 class="card-title">Raum erstellen</h2>
+                            <p class="card-desc">Erstelle einen Raum und teile den Code mit deinem Gegner.</p>
+                            <button class="btn-primary" id="createBtn">Spiel erstellen →</button>
+                            <div class="room-code hidden" id="roomCodeDisplay">
+                                <p class="code-label">Dein Raumcode</p>
+                                <p class="code-value" id="roomCode">------</p>
+                                <p class="code-hint">Teile diesen Code mit deinem Gegner</p>
+                            </div>
+                        </div>
+
+                        <!-- Beitreten -->
+                        <div class="lobby-card" id="joinCard">
+                            <p class="card-label">Beitreten</p>
+                            <h2 class="card-title">Raum beitreten</h2>
+                            <p class="card-desc">Gib den Code deines Gegners ein, um beizutreten.</p>
+                            <div class="join-input">
+                                <input type="text" id="roomInput" placeholder="CODE" maxlength="6" aria-label="Raumcode" />
+                                <button class="btn-primary btn-ghost" id="joinBtn">Beitreten →</button>
+                            </div>
+                            <p class="error-msg hidden" id="joinError">Raum nicht gefunden</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Gegen Computer -->
+                <section class="mode mode-solo" id="soloSection">
+                    <div class="mode-head">
+                        <span class="mode-num" aria-hidden="true"></span>
+                        <div class="mode-text">
+                            <p class="mode-label">Stockfish</p>
+                            <h2 class="mode-title">Gegen Computer</h2>
+                            <p class="mode-desc">Stockfish in vier Stufen.</p>
+                        </div>
+                    </div>
+                    <div class="mode-body">
+                        <div class="tc-grid" id="diffGrid"></div>
+                        <div class="solo-start">
+                            <button class="btn-primary" id="soloBtn">Spiel starten →</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Hot-Seat -->
+                <section class="mode mode-hotseat" id="hotSeatSection">
+                    <div class="mode-head">
+                        <span class="mode-num" aria-hidden="true"></span>
+                        <div class="mode-text">
+                            <p class="mode-label">2 Spieler</p>
+                            <h2 class="mode-title">Hot-Seat</h2>
+                            <p class="mode-desc">Beide am gleichen Gerät. Das Brett dreht sich nach jedem Zug.</p>
+                        </div>
+                    </div>
+                    <div class="mode-body">
+                        <div class="solo-start">
+                            <button class="btn-primary btn-ghost" id="hotSeatBtn">Hot-Seat starten →</button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- Warte-Status -->
+            <div class="lobby-waiting hidden" id="waitingScreen">
+                <div class="waiting-dot"></div>
+                <p class="waiting-text">Warte auf Gegner...</p>
             </div>
 
         </div>
-
-        <!-- Gegen Computer -->
-        <section class="tc-section" id="soloSection">
-            <p class="tc-section-label">Gegen Computer</p>
-            <div class="tc-grid" id="diffGrid"></div>
-            <div class="solo-start">
-                <button class="btn-primary" id="soloBtn">Spiel starten →</button>
-            </div>
-        </section>
-
-        <!-- Hot-Seat -->
-        <section class="tc-section" id="hotSeatSection">
-            <p class="tc-section-label">Hot-Seat (2 Spieler)</p>
-            <p class="tc-section-desc">Beide Spieler am gleichen Gerät – das Brett dreht sich nach jedem Zug.</p>
-            <div class="solo-start">
-                <button class="btn-primary" id="hotSeatBtn">Hot-Seat starten →</button>
-            </div>
-        </section>
-
-        <!-- Warte-Status -->
-        <div class="lobby-waiting hidden" id="waitingScreen">
-            <div class="waiting-dot"></div>
-            <p class="waiting-text">Warte auf Gegner...</p>
-        </div>
-
     </main>
 
     <script type="module" src="/src/lobby.js"></script>

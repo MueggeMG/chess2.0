@@ -2,6 +2,7 @@
 // IMPORTS
 // =========================================
 import { io } from 'socket.io-client';
+import './theme.js';
 
 // =========================================
 // SERVER VERBINDUNG
@@ -11,7 +12,7 @@ const socket = io('https://chess2-0-server.onrender.com');
 // =========================================
 // HINTERGRUND ANIMATION
 // =========================================
-const C = 'rgb(201,168,76)';
+const C = 'currentColor';
 const FD = 17;
 
 const P = {
