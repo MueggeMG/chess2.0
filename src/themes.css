@@ -97,6 +97,15 @@
   --dot: #3b2a14;
   --dot-edge: #f6e9c8;
   --piece-filter: none;
+  --deco-glow:
+    radial-gradient(ellipse 70% 50% at 50% -8%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%),
+    radial-gradient(ellipse 55% 45% at 108% 108%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%);
+  --deco-pattern: repeating-conic-gradient(color-mix(in srgb, var(--accent) 5.5%, transparent) 0% 25%, transparent 0% 50%);
+  --deco-size: 120px;
+  --deco-mask: radial-gradient(ellipse 62% 58% at 50% 45%, transparent 38%, #000 100%);
+  --hero-deco:
+    radial-gradient(ellipse 90% 55% at 0% 0%, color-mix(in srgb, var(--hero-accent) 16%, transparent), transparent 70%),
+    radial-gradient(ellipse 80% 50% at 100% 105%, rgba(0, 0, 0, 0.28), transparent 70%);
 }
 
 /* B Turnierpapier */
@@ -154,6 +163,11 @@
   --dot: #14302a;
   --dot-edge: #f1ead0;
   --piece-filter: none;
+  --deco-glow:
+    radial-gradient(ellipse 60% 50% at 0% 0%, rgba(47, 122, 99, 0.13), transparent 70%),
+    radial-gradient(ellipse 55% 45% at 105% 105%, rgba(201, 168, 76, 0.16), transparent 70%);
+  --deco-pattern: repeating-conic-gradient(rgba(31, 77, 63, 0.045) 0% 25%, transparent 0% 50%);
+  --deco-size: 128px;
 }
 
 /* C Bento Dunkel */
@@ -207,6 +221,11 @@
   --dot: #0a0d12;
   --dot-edge: #dff3ef;
   --piece-filter: drop-shadow(0 0 0.6px rgba(255, 255, 255, 0.55));
+  --deco-glow:
+    radial-gradient(ellipse 55% 50% at 100% 0%, rgba(79, 209, 181, 0.16), transparent 70%),
+    radial-gradient(ellipse 55% 50% at 0% 100%, rgba(66, 110, 220, 0.14), transparent 70%);
+  --deco-pattern: radial-gradient(circle, rgba(79, 209, 181, 0.22) 1.2px, transparent 1.6px);
+  --deco-size: 26px;
 }
 
 /* D Clean Hell */
@@ -265,6 +284,13 @@
   --dot: #1b2f78;
   --dot-edge: #eef2ff;
   --piece-filter: none;
+  --deco-glow:
+    radial-gradient(ellipse 60% 50% at 0% 0%, rgba(47, 91, 234, 0.12), transparent 70%),
+    radial-gradient(ellipse 55% 45% at 105% 100%, rgba(120, 150, 240, 0.14), transparent 70%);
+  --deco-pattern:
+    linear-gradient(rgba(47, 91, 234, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(47, 91, 234, 0.07) 1px, transparent 1px);
+  --deco-size: 48px;
 }
 
 /* E Clean Dunkel */
@@ -323,6 +349,13 @@
   --dot: #ff7a3d;
   --dot-edge: #0f1115;
   --piece-filter: drop-shadow(0 0 0.6px rgba(255, 255, 255, 0.55));
+  --deco-glow:
+    radial-gradient(ellipse 60% 50% at 100% 105%, rgba(255, 122, 61, 0.16), transparent 70%),
+    radial-gradient(ellipse 55% 45% at 0% -5%, rgba(120, 140, 190, 0.12), transparent 70%);
+  --deco-pattern:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  --deco-size: 48px;
 }
 
 /* F Schwarz & Gold (edel) */
@@ -386,6 +419,11 @@
   --dot: #c8a96a;
   --dot-edge: #14110d;
   --piece-filter: drop-shadow(0 0 0.6px rgba(255, 255, 255, 0.55));
+  --deco-glow:
+    radial-gradient(ellipse 65% 50% at 50% -8%, rgba(200, 169, 106, 0.18), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 50% 112%, rgba(200, 169, 106, 0.1), transparent 70%);
+  --deco-pattern: repeating-linear-gradient(45deg, rgba(200, 169, 106, 0.1) 0 1px, transparent 1px 16px);
+  --deco-size: auto;
 }
 
 /* G Bordeaux & Elfenbein (edel) */
@@ -446,6 +484,11 @@
   --dot: #2a1a1d;
   --dot-edge: #f5efe4;
   --piece-filter: none;
+  --deco-glow:
+    radial-gradient(ellipse 60% 50% at 0% 0%, rgba(122, 51, 65, 0.12), transparent 70%),
+    radial-gradient(ellipse 55% 45% at 105% 105%, rgba(201, 164, 90, 0.2), transparent 70%);
+  --deco-pattern: repeating-conic-gradient(rgba(85, 32, 44, 0.04) 0% 25%, transparent 0% 50%);
+  --deco-size: 128px;
 }
 
 /* H Marine & Silber (edel) */
@@ -507,6 +550,11 @@
   --dot: #14213d;
   --dot-edge: #eef1f6;
   --piece-filter: none;
+  --deco-glow:
+    radial-gradient(ellipse 60% 50% at 0% 0%, rgba(74, 98, 144, 0.16), transparent 70%),
+    radial-gradient(ellipse 55% 45% at 105% 105%, rgba(170, 184, 212, 0.4), transparent 70%);
+  --deco-pattern: repeating-conic-gradient(rgba(20, 33, 61, 0.04) 0% 25%, transparent 0% 50%);
+  --deco-size: 112px;
 }
 
 /* =========================================
@@ -689,4 +737,29 @@ coords.squares:nth-of-type(even) :nth-child(odd) {
 coords.squares:nth-of-type(odd) :nth-child(odd),
 coords.squares:nth-of-type(even) :nth-child(even) {
   color: var(--sq1);
+}
+
+/* =========================================
+   HINTERGRUND-DEKOR (nur große Bildschirme)
+   ::before = weiche Farbverläufe, ::after = feines Muster, zum Rand hin sichtbar
+========================================= */
+@media (min-width: 1000px) {
+  body::before,
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+  body::before { background: var(--deco-glow); }
+  body::after {
+    background: var(--deco-pattern);
+    background-size: var(--deco-size) var(--deco-size);
+    -webkit-mask-image: var(--deco-mask);
+    mask-image: var(--deco-mask);
+  }
+  [data-layout^='split'] .lobby-hero {
+    background-image: var(--hero-deco);
+  }
 }
