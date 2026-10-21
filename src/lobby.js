@@ -80,31 +80,6 @@ cfg.forEach((c) => {
 });
 
 // =========================================
-// CURSOR
-// =========================================
-const cursor = document.getElementById('cursor');
-let mx = 0,
-  my = 0,
-  cx = 0,
-  cy = 0;
-
-document.addEventListener('mousemove', (e) => {
-  mx = e.clientX;
-  my = e.clientY;
-});
-(function animCursor() {
-  cx += (mx - cx) * 0.12;
-  cy += (my - cy) * 0.12;
-  cursor.style.transform = `translate(${cx - 4}px, ${cy - 4}px)`;
-  requestAnimationFrame(animCursor);
-})();
-
-document.querySelectorAll('button, .lobby-card').forEach((el) => {
-  el.addEventListener('mouseenter', () => cursor.classList.add('grow'));
-  el.addEventListener('mouseleave', () => cursor.classList.remove('grow'));
-});
-
-// =========================================
 // ZEITKONTROLLE
 // =========================================
 const TIME_CONTROLS = [

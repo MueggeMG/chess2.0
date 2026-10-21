@@ -15,13 +15,8 @@ body {
   font-family: var(--f-body);
   font-weight: var(--fw);
   min-height: 100vh;
-  cursor: none;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-}
-
-@media (hover: none) {
-  body { cursor: auto; }
 }
 
 .hidden {
@@ -44,29 +39,6 @@ body {
 @keyframes fall { from { top: -150px; } to { top: 110vh; } }
 @keyframes rcw { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes rccw { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
-
-/* CURSOR */
-.cursor {
-  width: 8px;
-  height: 8px;
-  background: var(--accent);
-  border-radius: 50%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 9999;
-  transition: width 0.2s, height 0.2s;
-}
-.cursor.grow {
-  width: 40px;
-  height: 40px;
-  margin-left: -16px;
-  margin-top: -16px;
-  background: transparent;
-  border: 1px solid var(--accent);
-}
-@media (hover: none) { .cursor { display: none; } }
 
 .lobby {
   position: relative;
