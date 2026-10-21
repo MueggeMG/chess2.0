@@ -3,6 +3,7 @@
 // =========================================
 import { io } from 'socket.io-client';
 import './theme.js';
+import './hero-board.js';
 
 // =========================================
 // SERVER VERBINDUNG
