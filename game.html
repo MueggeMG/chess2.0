@@ -77,6 +77,17 @@
     </div>
 
     <div id="container">
+      <div id="actions">
+        <p class="action-label">Aktionen</p>
+        <div id="action-buttons">
+          <button id="undoBtn">Zurück <span>←</span></button>
+          <button id="drawBtn">Remis <span>½</span></button>
+          <button id="surrenderBtn">Aufgeben <span>✕</span></button>
+          <button id="redoBtn">Vor <span>→</span></button>
+        </div>
+        <button id="newGameBtn">Neues Spiel ↺</button>
+      </div>
+
       <!-- Spieluhr oben (Gegner) -->
       <div class="clock hidden" id="clockTop">
         <span class="clock-cat" id="clockCatTop">Gegner</span>
@@ -153,17 +164,6 @@
     </div>
 
     <div id="sidebar-right">
-      <div id="actions">
-        <p class="action-label">Aktionen</p>
-        <div id="action-buttons">
-          <button id="undoBtn">Zurück <span>←</span></button>
-          <button id="drawBtn">Remis <span>½</span></button>
-          <button id="surrenderBtn">Aufgeben <span>✕</span></button>
-          <button id="redoBtn">Vor <span>→</span></button>
-        </div>
-        <button id="newGameBtn">Neues Spiel ↺</button>
-      </div>
-
       <div id="protokoll">
         <p class="proto-label">Spielstatus</p>
         <div id="status">
@@ -173,11 +173,11 @@
         </div>
 
         <p class="proto-label" style="margin-top: 16px">Zughistorie</p>
-        <div id="history"></div>
         <div id="history-nav">
           <button id="histPrevBtn" title="Vorheriger Zug">◀</button>
           <button id="histNextBtn" title="Nächster Zug">▶</button>
         </div>
+        <div id="history"></div>
       </div>
     </div>
   </div>

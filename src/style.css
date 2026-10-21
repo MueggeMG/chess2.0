@@ -704,7 +704,7 @@ nav.scrolled {
 #history-nav {
   display: flex;
   gap: 6px;
-  margin-top: 8px;
+  margin-bottom: 8px;
 }
 #history-nav button {
   flex: 1;
@@ -914,7 +914,7 @@ footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 16px;
+  padding: 4px 14px;
   border: 1px solid var(--border);
   background: rgba(255, 255, 255, 0.03);
   transition: border-color 0.2s, background 0.2s;
@@ -927,7 +927,7 @@ footer {
 
 .clock-time {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 32px;
+  font-size: 22px;
   font-weight: 300;
   letter-spacing: 0.02em;
   color: var(--gray);
@@ -1042,3 +1042,15 @@ footer {
 }
 
 .gift-toast.hidden { display: none; }
+
+/* ---- Aktionen über dem Brett (kompakt) ---- */
+#container #actions {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+#container .action-label { display: none; }
+#container #action-buttons button,
+#container #newGameBtn {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
