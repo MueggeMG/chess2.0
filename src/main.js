@@ -495,7 +495,7 @@ function updateBoard(lastMove = undefined) {
       free: false,
       dests: getLegalMoves(),
     };
-    config.orientation = turn;
+    if (!lockScreen) config.orientation = turn;
   } else {
     // Einzelspieler: Spieler ist immer Weiß
     // Wenn Engine am Zug → getWhiteDests() übergeben, damit Chessground
@@ -689,6 +689,31 @@ document.querySelectorAll('.diff-item').forEach((item) => {
 //      NEW GAME / SURRENDER / UNDO / REDO
 // =========================================
 let redoStack = [];
+
+// Hot-Seat: "Screen festsetzen" = Brett dreht sich nach Zügen nicht mehr
+const LOCK_KEY = 'chess2.hotseat.lockScreen';
+let lockScreen = false;
+if (isHotSeat) {
+  try { lockScreen = localStorage.getItem(LOCK_KEY) === '1'; } catch (e) { /* Storage nicht verfügbar */ }
+}
+const lockBtn = document.getElementById('lockScreenBtn');
+
+function renderLockBtn() {
+  lockBtn.classList.toggle('on', lockScreen);
+  lockBtn.setAttribute('aria-pressed', String(lockScreen));
+}
+
+if (isHotSeat) {
+  lockBtn.classList.remove('hidden');
+  renderLockBtn();
+  lockBtn.addEventListener('click', () => {
+    lockScreen = !lockScreen;
+    try { localStorage.setItem(LOCK_KEY, lockScreen ? '1' : '0'); } catch (e) { /* ignorieren */ }
+    renderLockBtn();
+    // Beim Ausschalten sofort zum Spieler am Zug drehen, beim Einschalten bleibt das Brett stehen
+    if (!lockScreen && viewIndex === null) updateBoard();
+  });
+}
 let viewIndex = null; // null = aktuelle Stellung, Zahl = historische Zugansicht
 
 // Zeigt eine vergangene Stellung auf dem Brett (nur lokal, ändert chess nicht)
@@ -1025,6 +1050,7 @@ function saveGame() {
       skill: skillLevel,
       moveTime,
       over: lastOver,
+      orient: ground.state.orientation,
     });
     if (json === lastSavedJson) return;
     lastSavedJson = json;
@@ -1067,6 +1093,7 @@ function restoreGame() {
   const hist = chess.history({ verbose: true });
   const last = hist[hist.length - 1];
   updateBoard(last ? [last.from, last.to] : undefined);
+  if (isHotSeat && lockScreen && saved.orient) ground.set({ orientation: saved.orient });
   if (timeParam > 0) renderClocks();
 
   if (saved.over) {

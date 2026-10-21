@@ -976,3 +976,62 @@ footer {
   padding-top: 8px;
   padding-bottom: 8px;
 }
+
+/* ---- Hot-Seat: Screen festsetzen ---- */
+#action-extra {
+  display: flex;
+  width: 100%;
+}
+#action-extra #newGameBtn {
+  flex: 1;
+  width: auto;
+  min-width: 0;
+}
+#lockScreenBtn {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--panel);
+  border: 1px solid var(--border-subtle);
+  border-top: none;
+  border-left: none;
+  color: var(--white);
+  font-family: var(--f-body);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+#lockScreenBtn.hidden { display: none; }
+#lockScreenBtn .lock-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  box-sizing: border-box;
+}
+#lockScreenBtn:hover {
+  border-color: var(--border-hover);
+}
+#lockScreenBtn.on {
+  background: var(--gold-dim);
+  color: var(--gold);
+  border-color: var(--gold);
+}
+#lockScreenBtn.on .lock-dot {
+  background: var(--gold);
+  border-color: var(--gold);
+}
+@media (max-width: 480px) {
+  #action-extra #newGameBtn,
+  #lockScreenBtn {
+    letter-spacing: 0.06em;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}
