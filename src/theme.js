@@ -23,11 +23,11 @@ export function getTheme() {
     const t = localStorage.getItem(KEY);
     if (THEMES.some((x) => x.id === t)) return t;
   } catch (e) { /* Storage nicht verfügbar */ }
-  return 'a';
+  return 'h';
 }
 
 export function setTheme(id, persist = true) {
-  if (!THEMES.some((x) => x.id === id)) id = 'a';
+  if (!THEMES.some((x) => x.id === id)) id = 'h';
   const root = document.documentElement;
   root.dataset.theme = id;
   root.dataset.layout = layoutFor(id);

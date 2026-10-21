@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de" data-theme="a" data-layout="center">
+<html lang="de" data-theme="h" data-layout="split-ruled">
 
 <head>
   <meta charset="UTF-8" />
@@ -8,7 +8,7 @@
   <script>
     try {
       var t = localStorage.getItem('chess2.theme');
-      if (!/^[a-h]$/.test(t)) t = 'a';
+      if (!/^[a-h]$/.test(t)) t = 'h';
       var r = document.documentElement;
       r.dataset.theme = t;
       r.dataset.layout = t === 'a' ? 'center' : t === 'c' ? 'bento' : (t === 'd' || t === 'e') ? 'split-cards' : 'split-ruled';
