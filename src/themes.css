@@ -360,9 +360,9 @@
   --num-style: italic;
   --num-color: var(--accent);
   --num-size: 28px;
-  --n1: 'I';
-  --n2: 'II';
-  --n3: 'III';
+  --n1: '01';
+  --n2: '02';
+  --n3: '03';
   --sq1: #d8c9a3;
   --sq2: #3b3125;
   --hl: rgba(200, 169, 106, 0.55);
