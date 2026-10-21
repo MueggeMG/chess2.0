@@ -634,8 +634,11 @@ function hideOverlay() {
   setTimeout(() => overlay.classList.add('hidden'), 400);
 }
 
+let lastOver = null; // { title, sub } nach Spielende (für Wiederherstellung)
+
 function handleGameOver(title, sub) {
   stopClock();
+  if (!isMultiplayer) lastOver = { title, sub };
   showOverlay(title, sub);
   ground.set({ movable: { color: undefined, dests: new Map() } });
   document.getElementById('drawBtn')?.classList.remove('draw-available');
@@ -833,6 +836,11 @@ function updateStatus() {
     dot.className = myTurn ? `status-dot ${myColor}` : 'status-dot thinking';
     text.textContent = myTurn ? 'Dein Zug' : 'Gegner denkt...';
     sub.textContent = 'Zug ' + chess.moveNumber();
+  } else if (isHotSeat) {
+    const whiteTurn = chess.turn() === 'w';
+    dot.className = whiteTurn ? 'status-dot white' : 'status-dot black';
+    text.textContent = whiteTurn ? 'Weiß am Zug' : 'Schwarz am Zug';
+    sub.textContent = 'Zug ' + chess.moveNumber();
   } else {
     if (chess.turn() === 'w') {
       dot.className = 'status-dot white';
@@ -892,6 +900,8 @@ function updateHistory() {
 
 // Neues Spiel starten
 function startNewGame() {
+  lastOver = null;
+  clearSavedGame();
   chess.reset();
   redoStack = [];
   viewIndex = null;
@@ -985,6 +995,93 @@ function showGiftToast(msg) {
   clearTimeout(el._t);
   el._t = setTimeout(() => el.classList.add('hidden'), 2500);
 }
+
+// =========================================
+// SPIELSTAND SPEICHERN (Hot-Seat & gegen Stockfish)
+// Beim Neuladen geht die Partie dort weiter, wo sie aufgehört hat.
+// Die Lobby löscht den Stand, sobald ein neues Spiel gestartet wird.
+// =========================================
+const SAVE_KEY = 'chess2.game.' + (isHotSeat ? 'hotseat' : 'solo');
+const SAVE_SIG = [timeParam, incParam, skillParam].join('|');
+let lastSavedJson = '';
+
+const slimMove = (m) => ({ from: m.from, to: m.to, promotion: m.promotion });
+
+function clearSavedGame() {
+  lastSavedJson = '';
+  try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* Storage nicht verfügbar */ }
+}
+
+function saveGame() {
+  if (isMultiplayer) return;
+  try {
+    const moves = chess.history({ verbose: true }).map(slimMove);
+    if (!moves.length && !lastOver) { clearSavedGame(); return; }
+    const json = JSON.stringify({
+      sig: SAVE_SIG,
+      moves,
+      redo: redoStack.map(slimMove),
+      clock: clockMs,
+      skill: skillLevel,
+      moveTime,
+      over: lastOver,
+    });
+    if (json === lastSavedJson) return;
+    lastSavedJson = json;
+    localStorage.setItem(SAVE_KEY, json);
+  } catch (e) { /* Storage nicht verfügbar */ }
+}
+
+function requestEngineMove() {
+  if (!stockfish || chess.isGameOver() || chess.turn() !== 'b') return;
+  if (!engineReady) { setTimeout(requestEngineMove, 200); return; }
+  stockfish.postMessage(`setoption name Skill Level value ${skillLevel}`);
+  stockfish.postMessage('position fen ' + chess.fen());
+  stockfish.postMessage(`go movetime ${moveTime}`);
+}
+
+function restoreGame() {
+  if (isMultiplayer) return;
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null'); } catch (e) { saved = null; }
+  if (!saved || saved.sig !== SAVE_SIG || !Array.isArray(saved.moves)) return;
+
+  try {
+    chess.reset();
+    saved.moves.forEach((m) => chess.move(m));
+  } catch (e) {
+    chess.reset();
+    clearSavedGame();
+    return;
+  }
+  redoStack = Array.isArray(saved.redo) ? saved.redo : [];
+  if (saved.clock && timeParam > 0) clockMs = { white: saved.clock.white, black: saved.clock.black };
+  if (isSolo && saved.skill != null) {
+    skillLevel = saved.skill;
+    moveTime = saved.moveTime ?? moveTime;
+    document.querySelectorAll('.diff-item').forEach((item) => {
+      item.classList.toggle('active', parseInt(item.dataset.skill) === skillLevel);
+    });
+  }
+
+  const hist = chess.history({ verbose: true });
+  const last = hist[hist.length - 1];
+  updateBoard(last ? [last.from, last.to] : undefined);
+  if (timeParam > 0) renderClocks();
+
+  if (saved.over) {
+    handleGameOver(saved.over.title, saved.over.sub);
+  } else if (!chess.isGameOver()) {
+    if (timeParam > 0 && hist.length) startClockFor(chess.turn() === 'w' ? 'white' : 'black');
+    if (isSolo) requestEngineMove();
+  }
+  lastSavedJson = JSON.stringify(saved);
+}
+
+restoreGame();
+setInterval(saveGame, 1000);
+window.addEventListener('pagehide', saveGame);
+document.addEventListener('visibilitychange', () => { if (document.hidden) saveGame(); });
 
 updateStatus();
 updateHistory();

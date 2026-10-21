@@ -165,7 +165,13 @@ function renderDiffGrid() {
 }
 renderDiffGrid();
 
+// Neues Spiel gestartet: gespeicherten Spielstand verwerfen (Fortsetzen nur per Neuladen)
+function clearSavedGame(kind) {
+  try { localStorage.removeItem('chess2.game.' + kind); } catch (e) { /* Storage nicht verfügbar */ }
+}
+
 soloBtn.addEventListener('click', () => {
+  clearSavedGame('solo');
   const time  = selectedTC.mins * 60;
   const inc   = selectedTC.inc;
   const skill = selectedDiff.skill;
@@ -174,6 +180,7 @@ soloBtn.addEventListener('click', () => {
 
 const hotSeatBtn = document.getElementById('hotSeatBtn');
 hotSeatBtn.addEventListener('click', () => {
+  clearSavedGame('hotseat');
   const time = selectedTC.mins * 60;
   const inc  = selectedTC.inc;
   window.location.href = `/chess2.0/game.html?mode=hotseat&time=${time}&inc=${inc}`;
