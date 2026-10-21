@@ -84,67 +84,6 @@ nav.scrolled {
 }
 
 /* =========================================
-          HINTERGRUNDANIMATION
-========================================= */
-#bg {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  opacity: 0.22;
-}
-
-#bg .sg {
-  width: 100%;
-  height: 100%;
-}
-
-.pw {
-  position: absolute;
-  transform: translateX(-50%);
-}
-
-.bg-piece-wrap {
-  position: relative;
-  opacity: 1;
-}
-
-.bg-piece-wrap piece {
-  display: block;
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
-@keyframes fall {
-  from {
-    top: -900px;
-  }
-  to {
-    top: 110vh;
-  }
-}
-
-@keyframes rcw {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes rccw {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(-360deg);
-  }
-}
-
-/* =========================================
    GAME LAYOUT
 ========================================= */
 #game-layout {

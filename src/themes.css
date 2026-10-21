@@ -58,7 +58,6 @@
   --radius: 0;
   --radius-lg: 0;
   --tc-cols: 4;
-  --bg-anim: block;
   --rule-display: none;
   --code-color: var(--accent-2);
 
@@ -144,7 +143,6 @@
   --sec-label: var(--muted);
   --code-color: var(--accent);
   --tc-cols: 4;
-  --bg-anim: none;
   --num-display: block;
   --num-font: var(--f-display);
   --num-size: 30px;
@@ -201,7 +199,6 @@
   --sec-label: var(--muted);
   --radius: 14px;
   --radius-lg: 20px;
-  --bg-anim: none;
   --code-color: var(--accent);
   --sq1: #c7d3d4;
   --sq2: #2b5058;
@@ -258,7 +255,6 @@
   --sec-label: var(--muted);
   --radius: 10px;
   --radius-lg: 16px;
-  --bg-anim: none;
   --code-color: var(--accent);
   --board-radius: 14px;
   --board-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
@@ -317,7 +313,6 @@
   --sec-label: var(--muted);
   --radius: 10px;
   --radius-lg: 16px;
-  --bg-anim: none;
   --code-color: var(--accent);
   --board-border: 1px solid #262b35;
   --board-radius: 14px;
@@ -372,7 +367,6 @@
   --mt-size: 26px;
   --mt-weight: 400;
   --sec-label: var(--muted);
-  --bg-anim: none;
   --rule-display: block;
   --code-color: var(--accent);
   --num-display: block;
@@ -436,7 +430,6 @@
   --mt-size: 30px;
   --mt-weight: 600;
   --sec-label: var(--muted);
-  --bg-anim: none;
   --rule-display: block;
   --code-color: var(--accent);
   --num-display: block;
@@ -497,7 +490,6 @@
   --mt-size: 28px;
   --mt-weight: 400;
   --sec-label: var(--muted);
-  --bg-anim: none;
   --code-color: var(--accent);
   --num-display: block;
   --num-font: var(--f-display);

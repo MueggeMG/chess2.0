@@ -7,7 +7,6 @@ import 'chessground/assets/chessground.base.css';
 import 'chessground/assets/chessground.cburnett.css';
 import './style.css';
 import './theme.js';
-import './background.js';
 import { io } from 'socket.io-client';
 
 // =========================================
